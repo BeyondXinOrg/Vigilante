@@ -1,0 +1,48 @@
+﻿cmake_minimum_required(VERSION 3.12)
+include(cmake/clean-all.cmake)
+project(Vigilante LANGUAGES CXX)
+
+if(MSVC)
+    set(Qt5_DIR  "C:/Qt/5.15.2/5.15.2/msvc2019_64/lib/cmake/Qt5")
+endif()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/bin/Debug)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/bin/Debug)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/bin/Debug)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/bin/Release)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/bin/Release)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/bin/Release)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD 11)
+set(BUILD_SHARED_LIBS "" ON)
+
+set(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2 /DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "/MDd /Zi /Ob0 /Od /RTC1")
+
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network Concurrent Sql)
+add_definitions(-DQT_MESSAGELOGCONTEXT)
+
+add_subdirectory(src)
+
+add_custom_target(clean-all
+   COMMAND ${CMAKE_BUILD_TOOL} clean
+   COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

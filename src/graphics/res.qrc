@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>misc/targetMouseCursor.png</file>
+        <file>misc/pushback.png</file>
+        <file>effects/poof/poof0.png</file>
+        <file>effects/poof/poof1.png</file>
+        <file>effects/poof/poof2.png</file>
+        <file>effects/poof/poof3.png</file>
+        <file>effects/poof/poof4.png</file>
+        <file>effects/poof/poof5.png</file>
+        <file>effects/poof/poof6.png</file>
+        <file>effects/poof/poof7.png</file>
+        <file>effects/poof/poof8.png</file>
+        <file>effects/poof/poof9.png</file>
+        <file>effects/rain.png</file>
+        <file>effects/splash/splash0.png</file>
+        <file>effects/splash/splash1.png</file>
+        <file>effects/splash/splash2.png</file>
+        <file>effects/splash/splash3.png</file>
+        <file>effects/snow/snow0.png</file>
+        <file>effects/snow/snow1.png</file>
+        <file>effects/fog.png</file>
+        <file>effects/fireball.png</file>
+        <file>effects/fireRain.png</file>
+        <file>hero/001.png</file>
+        <file>hero/002.png</file>
+        <file>hero/003.png</file>
+        <file>hero/004.png</file>
+    </qresource>
+</RCC>
