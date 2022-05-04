@@ -15,6 +15,8 @@ public:
 
     void SetSpritePos(QPointF pos_by_scene);
 
+    void SetTempPreview(short blood, double progress);
+
 protected:
     void paint(
       QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
@@ -24,6 +26,7 @@ private:
 
 private:
     QGraphicsPixmapItem* pixmap_item_;
+    QGraphicsTextItem* text_item_;
     //    QPixmap cur_animation_pix_;
 };
 

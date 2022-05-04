@@ -4,6 +4,8 @@
 #include "scene/path_grid.h"
 #include "scene/scene_manager.h"
 
+#include <QRandomGenerator>
+
 Hero::Hero()
 {
     batle_mgr_ = nullptr;
@@ -42,6 +44,13 @@ void Hero::SetBattle(SceneManager* mgr)
     SetCell(cell_);
 }
 
+double Hero::TimeAdvance()
+{
+    state_.action_progress += 0.1 * base_properties_.agile;
+    TmpUpState();
+    return state_.action_progress;
+}
+
 void Hero::SetHeroSprite(HeroSprite* sprite)
 {
     //    if (map_) { // 如果实体已在地图中
@@ -53,16 +62,25 @@ void Hero::SetHeroSprite(HeroSprite* sprite)
     // 设置内部精灵\指向新精灵的指针
     sprite_ = sprite;
     sprite_->setParent(this);
+    TmpUpState();
 }
 
 void Hero::InitialState()
 {
     base_properties_.action_force = 3;
-    base_properties_.agile = 12;
+    base_properties_.agile = 4;
     base_properties_.physical_attack = 50;
     base_properties_.physical_defense = 3;
     base_properties_.max_blood = 100;
 
     state_.blood = base_properties_.max_blood;
     state_.action_progress = 0;
+
+    base_properties_.agile += QRandomGenerator::global()->bounded(10);
+}
+
+// 临时更新状态
+void Hero::TmpUpState()
+{
+    sprite_->SetTempPreview(state_.blood, state_.action_progress);
 }

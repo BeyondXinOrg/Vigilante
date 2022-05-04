@@ -28,10 +28,10 @@ add_definitions(-DQT_MESSAGELOGCONTEXT)
 
 add_subdirectory(src)
 
-add_custom_target(clean-all
-   COMMAND ${CMAKE_BUILD_TOOL} clean
-   COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
-)
+#add_custom_target(clean-all
+#   COMMAND ${CMAKE_BUILD_TOOL} clean
+#   COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
+#)
 
 
 

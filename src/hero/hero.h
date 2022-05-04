@@ -22,7 +22,7 @@ struct HeroProperties
 struct HeroState
 {
     short blood { 0 }; // 血量
-    short action_progress { 0 };
+    double action_progress { 0 };
 };
 
 class Hero : public QObject
@@ -39,8 +39,12 @@ public:
 
     void SetBattle(SceneManager* mgr);
 
+    double TimeAdvance();
+
 private:
     void InitialState();
+
+    void TmpUpState();
 
 private:
     Cell cell_;
