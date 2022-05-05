@@ -19,31 +19,45 @@ struct HeroProperties
     short max_blood { 0 }; // 最大血量
 };
 
-struct HeroState
+struct HeroState // 英雄状态
 {
     short blood { 0 }; // 血量
     double action_progress { 0 };
+};
+
+enum BattleState // 战斗状态
+{
+    KEnergyStorage, // 蓄力（跑进度条）
+    KSelectionDestination, // 选择移动位置
+    KSelectionTarget, // 选择对象(攻击、用药)
 };
 
 class Hero : public QObject
 {
     Q_OBJECT
 public:
+    // 初始化
     Hero();
     ~Hero();
-
-    void SetCell(const Cell& new_cell);
-    Cell GetCell() const;
     void SetHeroSprite(HeroSprite* sprite);
     HeroSprite* GetSprite() const;
-
     void SetBattle(SceneManager* mgr);
 
-    double TimeAdvance();
+    // 设置位置
+    void SetCell(const Cell& new_cell);
+    Cell GetCell() const;
+    // 跑进度条
+    double ActionTimeAdvance();
+    void ActionTimeReset();
+    // 战斗状态
+    void SetBattleState(const BattleState& state);
+    BattleState GetBattleState() const;
+
+    // 获取当前可移动范围
+    QList<Cell> GetMovingRange() const;
 
 private:
     void InitialState();
-
     void TmpUpState();
 
 private:
@@ -51,7 +65,8 @@ private:
     HeroSprite* sprite_;
 
     HeroProperties base_properties_; // 基本属性
-    HeroState state_; // 状态
+    HeroState hero_state_; //  英雄状态
+    BattleState battle_state_; // 战斗状态
 
     SceneManager* batle_mgr_;
 };

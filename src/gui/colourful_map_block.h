@@ -14,13 +14,13 @@ class ColourfulMapBlock : public Gui
 public:
     enum Type
     {
-        KHoverBlockType, // 格子：鼠标高亮
+        KHover_Block_Type, // 格子：鼠标高亮
 
-        KCurHeroBolockType, // 格子：当前英雄位置
-        KCurHeroRangeType, // 格子：当前英雄移动范围
+        KCurHero_Bolock_Type, // 格子：当前英雄位置
+        KCurHero_Range_Type, // 格子：当前英雄移动范围
 
-        KPlayerCampType, // 格子：玩家阵营
-        KEnemyCampType, // 格子：敌对阵营
+        KPlayer_Camp_Type, // 格子：玩家阵营
+        KEnemy_Camp_Type, // 格子：敌对阵营
     };
 
 public:
@@ -31,6 +31,8 @@ public:
 
     void ShowCurHeroBlock(const Cell& cur_cell);
     void HideCurHeroBlock();
+
+    void ShowMovingRangeBlock(const QList<Cell>& cells = {});
 
     void UpdataCampBlock(const QList<Cell>& player_cell,
                          const QList<Cell>& enemy_cell);

@@ -24,7 +24,7 @@ SceneManager::SceneManager(
   , lay_heros_(new QGraphicsRectItem())
   , lay_gui_(new QGraphicsRectItem())
 {
-    tile_sheet_ = new TileSheet("C:\\Users\\77935\\Desktop/2.png", 1, 5, 22, 22);
+    tile_sheet_ = new TileSheet("./2.png", 1, 5, 22, 22);
     tile_sheet_->SetTileCell(Cell(0, 0), KTree_Cell);
     tile_sheet_->SetTileCell(Cell(1, 0), KWall_Cell);
     tile_sheet_->SetTileCell(Cell(3, 0), KNormal_Cell);
@@ -56,16 +56,16 @@ void SceneManager::Launch()
     view_->showNormal();
 }
 
-void SceneManager::AddHero(Hero* hero)
+bool SceneManager::AddHero(Hero* hero)
 {
     // 如果实体已在地图中，请不要执行任何操作
     if (heros_.contains(hero)) {
-        return;
+        return false;
     }
 
     // 人物目标路径有其他物品
     if (path_map_->Filled(hero->GetCell())) {
-        return;
+        return false;
     }
 
     hero->SetBattle(this);
@@ -73,6 +73,8 @@ void SceneManager::AddHero(Hero* hero)
     heros_ << hero;
 
     UpdataPathMap();
+
+    return true;
 }
 
 void SceneManager::RemoveHero(Hero* hero)
@@ -93,6 +95,11 @@ QGraphicsRectItem* SceneManager::GetGuiLayer() const
 PathGrid* SceneManager::GetPathGrid()
 {
     return path_grid_;
+}
+
+PathMap* SceneManager::GetPathMap()
+{
+    return path_map_;
 }
 
 // 重新计算地图的路径地图

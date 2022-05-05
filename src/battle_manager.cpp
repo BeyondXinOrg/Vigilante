@@ -13,6 +13,8 @@
 #include "scene/tile_sheet.h"
 #include "scene/view.h"
 
+#include <QApplication>
+#include <QThread>
 #include <QTimer>
 
 Hero* GetHero(int x, int y, int sprite_id)
@@ -35,20 +37,24 @@ BattleManager::BattleManager()
     Hero* hero;
 
     hero = GetHero(0, 0, 0);
-    scene_mgr_->AddHero(hero);
-    heros_[hero] = KEnemy;
+    if (scene_mgr_->AddHero(hero)) {
+        heros_[hero] = KEnemy;
+    }
 
     hero = GetHero(0, 1, 1);
-    scene_mgr_->AddHero(hero);
-    heros_[hero] = KEnemy;
+    if (scene_mgr_->AddHero(hero)) {
+        heros_[hero] = KEnemy;
+    }
 
     hero = GetHero(9, 9, 2);
-    scene_mgr_->AddHero(hero);
-    heros_[hero] = KPlayer;
+    if (scene_mgr_->AddHero(hero)) {
+        heros_[hero] = KPlayer;
+    }
 
     hero = GetHero(9, 8, 3);
-    scene_mgr_->AddHero(hero);
-    heros_[hero] = KPlayer;
+    if (scene_mgr_->AddHero(hero)) {
+        heros_[hero] = KPlayer;
+    }
 
     colourful_map_block_ = new ColourfulMapBlock;
     scene_mgr_->AddGui(colourful_map_block_);
@@ -89,15 +95,59 @@ void BattleManager::BattleTimeAdvance()
 {
     auto i = heros_.begin();
     while (i != heros_.end()) {
-        int action_progress = i.key()->TimeAdvance();
-        if (action_progress >= 100) {
-            //            if (Game_Player == i.value()) {
-            //                WaitingOperationHero(i.key());
-            //            } else if (Enemy == i.value()) {
-            //                AIOperationHero(i.key());
-            //            }
-            battle_timer_->stop();
+        auto hero = i.key();
+
+        // 英雄行动进度推进
+        int action_progress = hero->ActionTimeAdvance();
+        if (action_progress >= 100) { // 行动进度到达终点
+
+            cur_hero_ = hero;
+            cur_hero_->ActionTimeReset(); // 行动进度清空
+            colourful_map_block_->ShowCurHeroBlock(cur_hero_->GetCell());
+
+            if (KPlayer == i.value()) {
+                WaitOperationHero(cur_hero_);
+            } else if (KEnemy == i.value()) {
+                WaitOperationHero(cur_hero_);
+            }
+
+            qDebug() << hero;
         }
         ++i;
     }
+}
+
+// 等待玩家操作英雄
+void BattleManager::WaitOperationHero(Hero* hero)
+{
+    // 暂停时间
+    battle_timer_->stop();
+    // 调整当前英雄状态
+    hero->SetBattleState(KSelectionDestination);
+
+    // 计算、显示当前操作英雄可移动路径
+    auto cur_hero_move_range_ = hero->GetMovingRange();
+    colourful_map_block_->ShowMovingRangeBlock(cur_hero_move_range_);
+
+    QApplication::processEvents();
+    QThread::msleep(500);
+    EndOperationHero(hero);
+}
+
+// 等待AI操作英雄
+void BattleManager::WaitAIOperationHero(Hero* hero)
+{
+    battle_timer_->stop();
+}
+
+// 结束英雄操作，时间继续推进
+void BattleManager::EndOperationHero(Hero* hero)
+{
+    // 调整复位英雄状态
+    hero->SetBattleState(KEnergyStorage);
+    // 清空英雄可移动路径
+    colourful_map_block_->ShowMovingRangeBlock();
+    cur_hero_ = nullptr;
+    // 时间
+    battle_timer_->start();
 }

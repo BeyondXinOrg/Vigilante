@@ -25,12 +25,13 @@ public:
 
     void Launch();
 
-    void AddHero(Hero* hero);
+    bool AddHero(Hero* hero);
     void RemoveHero(Hero* hero);
 
     QGraphicsRectItem* GetHerosLayer() const;
     QGraphicsRectItem* GetGuiLayer() const;
     PathGrid* GetPathGrid();
+    PathMap* GetPathMap();
 
     void UpdataPathMap();
 

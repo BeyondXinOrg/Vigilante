@@ -2,6 +2,7 @@
 #define PATHMAP_H
 
 #include "data/cell_grid.h"
+#include "data/graph.h"
 
 class PathMap
 {
@@ -14,6 +15,9 @@ public:
     void UnFill(const Cell& cell);
 
     bool Filled(const Cell& cell) const;
+
+    Graph PartGridToGraph(const Cell& from, const int& power) const;
+    QList<Cell> CanReachPath(const Cell& from, const int& power) const;
 
 private:
     CellGrid* grid_;

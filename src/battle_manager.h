@@ -21,13 +21,15 @@ public:
 
 public:
     BattleManager();
-
     void Launch();
 
 private:
     void UpdataCampBlock();
-
     void BattleTimeAdvance();
+
+    void WaitOperationHero(Hero* hero);
+    void WaitAIOperationHero(Hero* hero);
+    void EndOperationHero(Hero* hero);
 
 private:
     SceneManager* scene_mgr_;
