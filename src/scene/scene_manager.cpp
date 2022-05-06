@@ -29,8 +29,6 @@ SceneManager::SceneManager(
     tile_sheet_->SetTileCell(Cell(1, 0), KWall_Cell);
     tile_sheet_->SetTileCell(Cell(3, 0), KNormal_Cell);
 
-    scene_->setSceneRect(0, 0, path_grid_->Width(), path_grid_->Height());
-
     lay_terrain_->SetPathGrid(path_grid_);
     lay_terrain_->SetTileSheetData(tile_sheet_);
     lay_terrain_->SetTerrainMap(terrain_map_);
@@ -52,8 +50,7 @@ SceneManager::SceneManager(
 
 void SceneManager::Launch()
 {
-    view_->setFixedSize(path_grid_->Width(), path_grid_->Height() + 2);
-    view_->showNormal();
+    view_->ShowWidget(path_grid_, 1920, 1080);
 }
 
 bool SceneManager::AddHero(Hero* hero)
@@ -118,8 +115,7 @@ void SceneManager::UpdataPathMap()
 // 返回当前鼠标位置
 Cell SceneManager::GetCurMouseCell() const
 {
-    QPointF mouse_pos =
-      view_->mapToScene(view_->mapFromGlobal(view_->cursor().pos()));
+    QPointF mouse_pos = view_->mapToScene(view_->mapFromGlobal(view_->cursor().pos()));
     return path_grid_->PointToCell(mouse_pos);
 }
 

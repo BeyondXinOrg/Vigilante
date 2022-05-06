@@ -30,7 +30,7 @@ Hero* GetHero(int x, int y, int sprite_id)
 
 BattleManager::BattleManager()
 {
-    cell_grid_ = new CellGrid(10, 10);
+    cell_grid_ = new CellGrid(22, 15);
 
     scene_mgr_ = new SceneManager(cell_grid_, 128);
 
@@ -129,9 +129,9 @@ void BattleManager::WaitOperationHero(Hero* hero)
     auto cur_hero_move_range_ = hero->GetMovingRange();
     colourful_map_block_->ShowMovingRangeBlock(cur_hero_move_range_);
 
-    QApplication::processEvents();
-    QThread::msleep(500);
-    EndOperationHero(hero);
+    //    QApplication::processEvents();
+    //    QThread::msleep(500);
+    //    EndOperationHero(hero);
 }
 
 // 等待AI操作英雄
