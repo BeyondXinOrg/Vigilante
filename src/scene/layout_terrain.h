@@ -1,11 +1,31 @@
-#ifndef LAYOUTTERRAIN_H
+﻿#ifndef LAYOUTTERRAIN_H
 #define LAYOUTTERRAIN_H
+
+#include "data/cell_grid.h"
 
 #include <QGraphicsItem>
 
 class TileSheet;
-class TerrainMap;
-class PathGrid;
+class SceneManager;
+
+enum TerrainType
+{
+    KNormal_Cell = 0,
+    KTree_Cell = 10,
+    KWall_Cell = 50,
+};
+
+class RandomForest
+{
+public:
+    RandomForest();
+
+    QList<Cell> GetForest(int id = -1) const;
+    int RandomForestSize(int min = 2, int max = 8);
+
+private:
+    QList<QList<Cell>> tree_types_;
+};
 
 class LayoutTerrain : public QGraphicsItem
 {
@@ -14,9 +34,9 @@ public:
     QRectF boundingRect() const override;
 
     void Resize(int width, int heigh);
-    void SetPathGrid(PathGrid* data);
+    void SetSceneManager(SceneManager* data);
     void SetTileSheetData(TileSheet* data);
-    void SetTerrainMap(TerrainMap* data);
+    QList<Cell> GetWallTerrainCell() const;
 
 protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* item,
@@ -25,11 +45,19 @@ protected:
     void UpdataTerrainBg();
 
 private:
+    void GenerateRandomTerrain();
+    void SmoothWallWayMap(int wall_bound = 4, int way_bound = 4);
+    void RefreshTypesCell();
+
+private:
     QRectF rect_;
 
-    PathGrid* path_grid_;
+    SceneManager* scene_mgr_;
     TileSheet* tile_sheet_;
-    TerrainMap* terrain_map_;
+
+    QHash<Cell, TerrainType> cells_type_;
+    QHash<TerrainType, QList<Cell>> types_cell_;
+    RandomForest random_forest_;
 
     QPixmap bg_pix_;
 };

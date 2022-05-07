@@ -2,7 +2,6 @@
 
 #include "data/cell_grid.h"
 #include "gui/brief_property_panel.h"
-#include "gui/colourful_map_block.h"
 #include "gui/gui.h"
 #include "hero/hero.h"
 #include "hero/hero_sprite.h"
@@ -10,7 +9,6 @@
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
 #include "scene/scene_manager.h"
-#include "scene/terrain_map.h"
 #include "scene/tile_sheet.h"
 #include "scene/view.h"
 
@@ -34,6 +32,12 @@ BattleManager::BattleManager()
     cell_grid_ = new CellGrid(22, 15);
     scene_mgr_ = new SceneManager(cell_grid_, 128);
 
+    ui_brief_property_ = new BriefPropertyPanel;
+    scene_mgr_->AddGui(ui_brief_property_);
+
+    battle_timer_ = new QTimer(this);
+    InitConnect();
+
     Hero* hero;
 
     hero = GetHero(0, 0, 0);
@@ -55,18 +59,6 @@ BattleManager::BattleManager()
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KPlayer;
     }
-
-    ui_colourful_map_block_ = new ColourfulMapBlock;
-    scene_mgr_->AddGui(ui_colourful_map_block_);
-
-    ui_brief_property_ = new BriefPropertyPanel;
-    scene_mgr_->AddGui(ui_brief_property_);
-
-    UpdataCampBlock();
-
-    battle_timer_ = new QTimer(this);
-    connect(battle_timer_, &QTimer::timeout,
-            this, &BattleManager::BattleTimeAdvance);
 }
 
 void BattleManager::Launch()
@@ -75,22 +67,13 @@ void BattleManager::Launch()
     battle_timer_->start(20);
 }
 
-// 更新阵营边框
-void BattleManager::UpdataCampBlock()
+void BattleManager::InitConnect()
 {
-    QList<Cell> player_cell;
-    QList<Cell> enemy_cell;
+    connect(battle_timer_, &QTimer::timeout,
+            this, &BattleManager::BattleTimeAdvance);
 
-    auto i = heros_.begin();
-    while (i != heros_.end()) {
-        if (KPlayer == i.value()) {
-            player_cell << i.key()->GetCell();
-        } else if (KEnemy == i.value()) {
-            enemy_cell << i.key()->GetCell();
-        }
-        ++i;
-    }
-    ui_colourful_map_block_->UpdataCampBlock(player_cell, enemy_cell);
+    connect(scene_mgr_, &SceneManager::SgnMouseRelease,
+            this, &BattleManager::OnSceneCellSelect);
 }
 
 // 时间推进
@@ -106,15 +89,12 @@ void BattleManager::BattleTimeAdvance()
 
             cur_hero_ = hero;
             cur_hero_->ActionTimeReset(); // 行动进度清空
-            ui_colourful_map_block_->ShowCurHeroBlock(cur_hero_->GetCell());
 
             if (KPlayer == i.value()) {
                 WaitOperationHero(cur_hero_);
             } else if (KEnemy == i.value()) {
                 WaitOperationHero(cur_hero_);
             }
-
-            qDebug() << hero;
         }
         ++i;
     }
@@ -129,8 +109,9 @@ void BattleManager::WaitOperationHero(Hero* hero)
     hero->SetBattleState(KSelectionDestination);
 
     // 计算、显示当前操作英雄可移动路径
-    auto cur_hero_move_range_ = hero->GetMovingRange();
-    ui_colourful_map_block_->ShowMovingRangeBlock(cur_hero_move_range_);
+    scene_mgr_->ShowHeroInstructions(cur_hero_);
+
+    //    auto cur_hero_move_range_ = hero->GetMovingRange();
 
     //    QApplication::processEvents();
     //    QThread::msleep(500);
@@ -149,8 +130,33 @@ void BattleManager::EndOperationHero(Hero* hero)
     // 调整复位英雄状态
     hero->SetBattleState(KEnergyStorage);
     // 清空英雄可移动路径
-    ui_colourful_map_block_->ShowMovingRangeBlock();
     cur_hero_ = nullptr;
     // 时间
     battle_timer_->start();
 }
+
+// 场景中点击
+void BattleManager::OnSceneCellSelect()
+{
+    //
+
+    auto hero = scene_mgr_->GetCurMouseHero();
+    scene_mgr_->ShowHeroInstructions(hero);
+}
+
+//// 更新阵营边框
+// void BattleManager::UpdataCampBlock()
+//{
+//     QList<Cell> player_cell;
+//     QList<Cell> enemy_cell;
+
+//    auto i = heros_.begin();
+//    while (i != heros_.end()) {
+//        if (KPlayer == i.value()) {
+//            player_cell << i.key()->GetCell();
+//        } else if (KEnemy == i.value()) {
+//            enemy_cell << i.key()->GetCell();
+//        }
+//        ++i;
+//    }
+//}

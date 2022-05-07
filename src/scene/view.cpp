@@ -3,6 +3,7 @@
 #include "data/cell_grid.h"
 #include "gui/gui.h"
 #include "scene/path_grid.h"
+#include "scene/scene_manager.h"
 
 #include <QDebug>
 #include <QGraphicsRectItem>
@@ -34,18 +35,21 @@ View::~View()
 {
 }
 
-void View::ShowWidget(PathGrid* path_grid, int w, int h)
+void View::SetSceneManager(SceneManager* scene_mgr)
 {
-    path_grid_ = path_grid;
+    scene_mgr_ = scene_mgr;
+}
 
+void View::ShowWidget(int w, int h)
+{
     setSceneRect(0, 0, w, h);
     setFixedSize(w, h);
 
     cam_rect_[0] = w;
     cam_rect_[1] = h;
 
-    cam_pos_max_[0] = path_grid_->Width() - w;
-    cam_pos_max_[1] = path_grid_->Height() - h;
+    cam_pos_max_[0] = scene_mgr_->GetPathGrid()->Width() - w;
+    cam_pos_max_[1] = scene_mgr_->GetPathGrid()->Height() - h;
 
     scene()->addItem(lay_gui_);
 
@@ -100,11 +104,9 @@ void View::mousePressEvent(QMouseEvent* event)
     auto mouse_buttons = event->buttons();
     if (mouse_buttons & Qt::LeftButton) { // 不管按哪里，移动相机
         drag_cam_ = true;
-        drag_cam_mouse_pos_ = event->pos();
-        drag_cam_center_pos_ = GetCenterCamPos();
+        press_pos_ = event->pos();
+        cam_center_pos_ = GetCenterCamPos();
     }
-
-    emit SgnMousePress();
 }
 
 void View::mouseMoveEvent(QMouseEvent* event)
@@ -112,7 +114,7 @@ void View::mouseMoveEvent(QMouseEvent* event)
     QGraphicsView::mouseMoveEvent(event);
 
     if (drag_cam_) {
-        const QPoint new_pos = drag_cam_center_pos_ + drag_cam_mouse_pos_ - event->pos();
+        const QPoint new_pos = cam_center_pos_ + press_pos_ - event->pos();
         SetCenterCamPos(new_pos);
     }
 }
@@ -121,14 +123,17 @@ void View::mouseReleaseEvent(QMouseEvent* event)
 {
     drag_cam_ = false;
 
-    QGraphicsView::mouseReleaseEvent(event); // 执行正常的QGraphicsView事件处理
-    if (event->isAccepted()) { // 事件已处理,结束
-        return;
-    }
+    // 执行正常的QGraphicsView事件处理
+    //    QGraphicsView::mouseReleaseEvent(event);
+    //    if (event->isAccepted()) { // 事件已处理,结束
+    //        return;
+    //    }
 
     // 左键松开
-    auto mouse_buttons = event->buttons();
-    if (mouse_buttons & Qt::LeftButton) {
+    auto mouse_buttons = event->button();
+    if (mouse_buttons == Qt::LeftButton
+        && (press_pos_ - event->pos()).manhattanLength() < 40) {
+        scene_mgr_->SgnMouseRelease();
     }
 }
 

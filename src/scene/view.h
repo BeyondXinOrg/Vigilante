@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 
 class PathGrid;
+class SceneManager;
 class Gui;
 
 class View : public QGraphicsView
@@ -12,16 +13,14 @@ class View : public QGraphicsView
 public:
     View(QWidget* parent = nullptr);
     ~View() override;
+    void SetSceneManager(SceneManager* scene_mgr);
 
-    void ShowWidget(PathGrid* cell_grid, int w, int h);
+    void ShowWidget(int w, int h);
 
     QPoint GetCenterCamPos() const;
     void SetCenterCamPos(QPointF position);
 
     void AddGui(Gui* gui);
-
-Q_SIGNALS:
-    void SgnMousePress();
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -36,11 +35,11 @@ private:
 
 private:
     // 网格数据
-    PathGrid* path_grid_;
+    SceneManager* scene_mgr_;
 
     bool drag_cam_;
-    QPoint drag_cam_mouse_pos_;
-    QPoint drag_cam_center_pos_;
+    QPoint press_pos_;
+    QPoint cam_center_pos_;
 
     double cam_rect_[2];
     double cam_pos_max_[2];

@@ -14,8 +14,8 @@ class LayoutTerrain;
 class CellGrid;
 class PathGrid;
 class PathMap;
-class TerrainMap;
 class Gui;
+class LayoutInstructions;
 
 class SceneManager : public QObject
 {
@@ -30,16 +30,26 @@ public:
 
     QGraphicsRectItem* GetHerosLayer() const;
     QGraphicsRectItem* GetGuiLayer() const;
+    CellGrid* GetCellGrid() const;
     PathGrid* GetPathGrid();
     PathMap* GetPathMap();
 
     void UpdataPathMap();
 
     Cell GetCurMouseCell() const;
+    Hero* GetCurMouseHero() const;
 
     void AddGui(Gui* gui);
 
     QSize GetViewSize() const;
+
+    void ShowHeroInstructions(Hero* hero);
+
+Q_SIGNALS:
+    void SgnMouseRelease();
+
+private:
+    void InitConnect();
 
 private:
     View* view_;
@@ -47,12 +57,12 @@ private:
 
     // 网格数据
     CellGrid* cell_grid_;
-
     PathGrid* path_grid_;
+
     PathMap* path_map_;
-    TerrainMap* terrain_map_;
 
     LayoutTerrain* lay_terrain_;
+    LayoutInstructions* lay_instructions_;
     QGraphicsRectItem* lay_heros_;
 
     QSet<Hero*> heros_;

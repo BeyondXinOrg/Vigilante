@@ -2,10 +2,10 @@
 
 #include "data/cell_grid.h"
 #include "gui/gui.h"
+#include "scene/layout_instructions.h"
 #include "scene/layout_terrain.h"
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
-#include "scene/terrain_map.h"
 #include "scene/tile_sheet.h"
 #include "scene/view.h"
 
@@ -18,22 +18,26 @@ SceneManager::SceneManager(
   , cell_grid_(cell_grid)
   , path_grid_(new PathGrid(cell_grid_, cell_size))
   , path_map_(new PathMap(cell_grid_))
-  , terrain_map_(new TerrainMap(cell_grid_))
 
   , lay_terrain_(new LayoutTerrain())
+  , lay_instructions_(new LayoutInstructions())
   , lay_heros_(new QGraphicsRectItem())
 {
+    view_->SetSceneManager(this);
+
     tile_sheet_ = new TileSheet("./2.png", 1, 5, 22, 22);
     tile_sheet_->SetTileCell(Cell(0, 0), KTree_Cell);
     tile_sheet_->SetTileCell(Cell(1, 0), KWall_Cell);
     tile_sheet_->SetTileCell(Cell(3, 0), KNormal_Cell);
 
-    lay_terrain_->SetPathGrid(path_grid_);
     lay_terrain_->SetTileSheetData(tile_sheet_);
-    lay_terrain_->SetTerrainMap(terrain_map_);
+    lay_terrain_->SetSceneManager(this);
     lay_terrain_->Resize(path_grid_->Width(), path_grid_->Height());
 
+    lay_instructions_->SetSceneManager(this);
+
     scene_->addItem(lay_terrain_);
+    scene_->addItem(lay_instructions_);
     scene_->addItem(lay_heros_);
 
     QBrush bb;
@@ -44,11 +48,13 @@ SceneManager::SceneManager(
     view_->setScene(scene_);
 
     UpdataPathMap();
+
+    InitConnect();
 }
 
 void SceneManager::Launch()
 {
-    view_->ShowWidget(path_grid_, 1920, 1080);
+    view_->ShowWidget(1920, 1080);
 }
 
 bool SceneManager::AddHero(Hero* hero)
@@ -87,6 +93,11 @@ QGraphicsRectItem* SceneManager::GetGuiLayer() const
     return lay_heros_;
 }
 
+CellGrid* SceneManager::GetCellGrid() const
+{
+    return cell_grid_;
+}
+
 PathGrid* SceneManager::GetPathGrid()
 {
     return path_grid_;
@@ -101,7 +112,7 @@ PathMap* SceneManager::GetPathMap()
 void SceneManager::UpdataPathMap()
 {
     path_map_->UnFill();
-    auto cells = terrain_map_->GetWallTerrainCell();
+    auto cells = lay_terrain_->GetWallTerrainCell();
     foreach (auto cell, cells) {
         path_map_->Fill(cell);
     }
@@ -113,8 +124,20 @@ void SceneManager::UpdataPathMap()
 // 返回当前鼠标位置
 Cell SceneManager::GetCurMouseCell() const
 {
-    QPointF mouse_pos = view_->mapToScene(view_->mapFromGlobal(view_->cursor().pos()));
+    QPointF mouse_pos = view_->mapToScene(
+      view_->mapFromGlobal(view_->cursor().pos()));
     return path_grid_->PointToCell(mouse_pos);
+}
+
+Hero* SceneManager::GetCurMouseHero() const
+{
+    Cell cell = GetCurMouseCell();
+    foreach (auto hero, heros_) {
+        if (hero->GetCell() == cell) {
+            return hero;
+        }
+    }
+    return nullptr;
 }
 
 void SceneManager::AddGui(Gui* gui)
@@ -126,4 +149,13 @@ void SceneManager::AddGui(Gui* gui)
 QSize SceneManager::GetViewSize() const
 {
     return view_->size();
+}
+
+void SceneManager::ShowHeroInstructions(Hero* hero)
+{
+    lay_instructions_->ChangeSelectHero(hero);
+}
+
+void SceneManager::InitConnect()
+{
 }

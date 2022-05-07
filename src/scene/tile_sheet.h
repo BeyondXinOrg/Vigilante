@@ -1,11 +1,11 @@
-#ifndef TILESHEET_H
+﻿#ifndef TILESHEET_H
 #define TILESHEET_H
 
 #include <QHash>
 #include <QPixmap>
 
-#include "scene/terrain_map.h"
 #include "data/cell.h"
+#include "scene/layout_terrain.h"
 
 class TileSheet
 {
