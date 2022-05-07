@@ -1,8 +1,9 @@
-#ifndef BALLTLEMANAGER_H
+﻿#ifndef BALLTLEMANAGER_H
 #define BALLTLEMANAGER_H
 
 class SceneManager;
 class ColourfulMapBlock;
+class BriefPropertyPanel;
 class CellGrid;
 class Hero;
 
@@ -33,7 +34,9 @@ private:
 
 private:
     SceneManager* scene_mgr_;
-    ColourfulMapBlock* colourful_map_block_;
+
+    ColourfulMapBlock* ui_colourful_map_block_;
+    BriefPropertyPanel* ui_brief_property_;
 
     CellGrid* cell_grid_;
 

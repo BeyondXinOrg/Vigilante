@@ -1,9 +1,11 @@
-#ifndef BATTLEVIEW_H
+﻿#ifndef BATTLEVIEW_H
 #define BATTLEVIEW_H
 
 #include <QGraphicsView>
 
 class PathGrid;
+class Gui;
+
 class View : public QGraphicsView
 {
     Q_OBJECT
@@ -15,6 +17,8 @@ public:
 
     QPoint GetCenterCamPos() const;
     void SetCenterCamPos(QPointF position);
+
+    void AddGui(Gui* gui);
 
 Q_SIGNALS:
     void SgnMousePress();
@@ -28,6 +32,9 @@ protected:
     void wheelEvent(QWheelEvent* event) override;
 
 private:
+    void UpdateGuiPositions();
+
+private:
     // 网格数据
     PathGrid* path_grid_;
 
@@ -37,6 +44,9 @@ private:
 
     double cam_rect_[2];
     double cam_pos_max_[2];
+
+    QGraphicsRectItem* lay_gui_;
+    QTimer* gui_update_timer_;
 };
 
 #endif // BATTLEVIEW_H

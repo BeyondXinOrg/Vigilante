@@ -1,4 +1,4 @@
-#ifndef COLOURFULMAPBLOCK_H
+﻿#ifndef COLOURFULMAPBLOCK_H
 #define COLOURFULMAPBLOCK_H
 
 #include "data/cell.h"

@@ -1,4 +1,4 @@
-#ifndef SceneManager_H
+﻿#ifndef SceneManager_H
 #define SceneManager_H
 
 #include "hero/hero.h"
@@ -39,6 +39,8 @@ public:
 
     void AddGui(Gui* gui);
 
+    QSize GetViewSize() const;
+
 private:
     View* view_;
     QGraphicsScene* scene_;
@@ -52,7 +54,6 @@ private:
 
     LayoutTerrain* lay_terrain_;
     QGraphicsRectItem* lay_heros_;
-    QGraphicsRectItem* lay_gui_;
 
     QSet<Hero*> heros_;
 

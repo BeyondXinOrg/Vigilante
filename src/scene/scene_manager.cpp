@@ -1,4 +1,4 @@
-#include "scene_manager.h"
+﻿#include "scene_manager.h"
 
 #include "data/cell_grid.h"
 #include "gui/gui.h"
@@ -22,7 +22,6 @@ SceneManager::SceneManager(
 
   , lay_terrain_(new LayoutTerrain())
   , lay_heros_(new QGraphicsRectItem())
-  , lay_gui_(new QGraphicsRectItem())
 {
     tile_sheet_ = new TileSheet("./2.png", 1, 5, 22, 22);
     tile_sheet_->SetTileCell(Cell(0, 0), KTree_Cell);
@@ -36,7 +35,6 @@ SceneManager::SceneManager(
 
     scene_->addItem(lay_terrain_);
     scene_->addItem(lay_heros_);
-    scene_->addItem(lay_gui_);
 
     QBrush bb;
     bb.setStyle(Qt::SolidPattern);
@@ -86,7 +84,7 @@ QGraphicsRectItem* SceneManager::GetHerosLayer() const
 
 QGraphicsRectItem* SceneManager::GetGuiLayer() const
 {
-    return lay_gui_;
+    return lay_heros_;
 }
 
 PathGrid* SceneManager::GetPathGrid()
@@ -121,5 +119,11 @@ Cell SceneManager::GetCurMouseCell() const
 
 void SceneManager::AddGui(Gui* gui)
 {
+    view_->AddGui(gui);
     gui->SetSceneManager(this);
+}
+
+QSize SceneManager::GetViewSize() const
+{
+    return view_->size();
 }

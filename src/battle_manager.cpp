@@ -1,6 +1,7 @@
-#include "battle_manager.h"
+﻿#include "battle_manager.h"
 
 #include "data/cell_grid.h"
+#include "gui/brief_property_panel.h"
 #include "gui/colourful_map_block.h"
 #include "gui/gui.h"
 #include "hero/hero.h"
@@ -31,7 +32,6 @@ Hero* GetHero(int x, int y, int sprite_id)
 BattleManager::BattleManager()
 {
     cell_grid_ = new CellGrid(22, 15);
-
     scene_mgr_ = new SceneManager(cell_grid_, 128);
 
     Hero* hero;
@@ -56,8 +56,11 @@ BattleManager::BattleManager()
         heros_[hero] = KPlayer;
     }
 
-    colourful_map_block_ = new ColourfulMapBlock;
-    scene_mgr_->AddGui(colourful_map_block_);
+    ui_colourful_map_block_ = new ColourfulMapBlock;
+    scene_mgr_->AddGui(ui_colourful_map_block_);
+
+    ui_brief_property_ = new BriefPropertyPanel;
+    scene_mgr_->AddGui(ui_brief_property_);
 
     UpdataCampBlock();
 
@@ -87,7 +90,7 @@ void BattleManager::UpdataCampBlock()
         }
         ++i;
     }
-    colourful_map_block_->UpdataCampBlock(player_cell, enemy_cell);
+    ui_colourful_map_block_->UpdataCampBlock(player_cell, enemy_cell);
 }
 
 // 时间推进
@@ -103,7 +106,7 @@ void BattleManager::BattleTimeAdvance()
 
             cur_hero_ = hero;
             cur_hero_->ActionTimeReset(); // 行动进度清空
-            colourful_map_block_->ShowCurHeroBlock(cur_hero_->GetCell());
+            ui_colourful_map_block_->ShowCurHeroBlock(cur_hero_->GetCell());
 
             if (KPlayer == i.value()) {
                 WaitOperationHero(cur_hero_);
@@ -127,7 +130,7 @@ void BattleManager::WaitOperationHero(Hero* hero)
 
     // 计算、显示当前操作英雄可移动路径
     auto cur_hero_move_range_ = hero->GetMovingRange();
-    colourful_map_block_->ShowMovingRangeBlock(cur_hero_move_range_);
+    ui_colourful_map_block_->ShowMovingRangeBlock(cur_hero_move_range_);
 
     //    QApplication::processEvents();
     //    QThread::msleep(500);
@@ -146,7 +149,7 @@ void BattleManager::EndOperationHero(Hero* hero)
     // 调整复位英雄状态
     hero->SetBattleState(KEnergyStorage);
     // 清空英雄可移动路径
-    colourful_map_block_->ShowMovingRangeBlock();
+    ui_colourful_map_block_->ShowMovingRangeBlock();
     cur_hero_ = nullptr;
     // 时间
     battle_timer_->start();

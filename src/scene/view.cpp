@@ -1,14 +1,18 @@
-#include "view.h"
+﻿#include "view.h"
 
 #include "data/cell_grid.h"
+#include "gui/gui.h"
 #include "scene/path_grid.h"
 
 #include <QDebug>
+#include <QGraphicsRectItem>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QTimer>
 
 View::View(QWidget* parent)
   : QGraphicsView(parent)
+  , lay_gui_(new QGraphicsRectItem())
 {
     // 禁用QGraphicsView的滚动条
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -20,6 +24,10 @@ View::View(QWidget* parent)
     setFocusPolicy(Qt::StrongFocus);
 
     drag_cam_ = false;
+
+    gui_update_timer_ = new QTimer(this);
+    connect(gui_update_timer_, &QTimer::timeout,
+            this, &View::UpdateGuiPositions);
 }
 
 View::~View()
@@ -39,7 +47,11 @@ void View::ShowWidget(PathGrid* path_grid, int w, int h)
     cam_pos_max_[0] = path_grid_->Width() - w;
     cam_pos_max_[1] = path_grid_->Height() - h;
 
+    scene()->addItem(lay_gui_);
+
     showNormal();
+
+    //    gui_update_timer_->start(0);
 }
 
 QPoint View::GetCenterCamPos() const
@@ -67,8 +79,14 @@ void View::SetCenterCamPos(QPointF position)
 
     this->setSceneRect(top_left.x(), top_left.y(), cam_rect_[0], cam_rect_[1]);
 
+    UpdateGuiPositions();
     this->scene()->update();
     this->update();
+}
+
+void View::AddGui(Gui* gui)
+{
+    gui->GetGraphicsItem()->setParentItem(lay_gui_);
 }
 
 void View::mousePressEvent(QMouseEvent* event)
@@ -94,7 +112,6 @@ void View::mouseMoveEvent(QMouseEvent* event)
     QGraphicsView::mouseMoveEvent(event);
 
     if (drag_cam_) {
-
         const QPoint new_pos = drag_cam_center_pos_ + drag_cam_mouse_pos_ - event->pos();
         SetCenterCamPos(new_pos);
     }
@@ -147,8 +164,6 @@ void View::keyPressEvent(QKeyEvent* event)
         matrix.scale(scale, scale);
         matrix.rotate(angle);
         setTransform(matrix);
-
-        qDebug() << scale;
         break;
     }
     case Qt::Key_Down: {
@@ -159,7 +174,6 @@ void View::keyPressEvent(QKeyEvent* event)
         matrix.rotate(angle);
         setTransform(matrix);
 
-        qDebug() << scale;
         break;
     }
     default:
@@ -170,4 +184,9 @@ void View::keyPressEvent(QKeyEvent* event)
 void View::wheelEvent(QWheelEvent* event)
 {
     Q_UNUSED(event)
+}
+
+void View::UpdateGuiPositions()
+{
+    lay_gui_->setPos(mapToScene(QPoint(0, 0)));
 }

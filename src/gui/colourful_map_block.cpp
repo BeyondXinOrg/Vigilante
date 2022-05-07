@@ -1,4 +1,4 @@
-#include "colourful_map_block.h"
+﻿#include "colourful_map_block.h"
 
 #include "scene/path_grid.h"
 #include "scene/scene_manager.h"
@@ -47,14 +47,12 @@ QGraphicsItem* ColourfulMapBlock::GetGraphicsItem()
 void ColourfulMapBlock::SetSceneManager(SceneManager* scene_mgr)
 {
     scene_mgr_ = scene_mgr;
-
-    center_item_->setParentItem(scene_mgr_->GetGuiLayer());
     center_item_->setVisible(true);
 
     const int cell_size = scene_mgr->GetPathGrid()->CellSize();
     blocks_[KHover_Block_Type][0]->setRect(0, 0, cell_size, cell_size);
     blocks_[KCurHero_Bolock_Type][0]->setRect(0, 0, cell_size, cell_size);
-    follow_timer_->start(20);
+    //    follow_timer_->start(20);
 
     const int space = 5;
     cell_rect_ = QRectF(space, space, cell_size - space * 2, cell_size - space * 2);
