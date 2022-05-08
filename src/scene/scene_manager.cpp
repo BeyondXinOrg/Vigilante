@@ -156,6 +156,11 @@ void SceneManager::ShowHeroInstructions(Hero* hero)
     lay_instructions_->ChangeSelectHero(hero);
 }
 
+void SceneManager::ShowHeroInstructions(const Cell& cell)
+{
+    lay_instructions_->ChangeSelectCell(cell);
+}
+
 void SceneManager::InitConnect()
 {
 }

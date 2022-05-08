@@ -17,16 +17,13 @@
 #include <QThread>
 #include <QTimer>
 
-Hero* CreateHero(int x, int y, int sprite_id)
+Hero* CreateHero(int x, int y, QString png)
 {
     Hero* hero = new Hero();
-    HeroSheet* hero_sheet = new HeroSheet("./b.png", 16, 3, 64, 64);
+    HeroSheet* hero_sheet = new HeroSheet(png, 16, 3, 64, 64);
     HeroSprite* hero_sprite = new HeroSprite();
 
-    hero_sprite->AddAnimation("death_up", hero_sheet->TileAt(Cell(12, 0), Cell(15, 0)));
-    hero_sprite->AddAnimation("death_down", hero_sheet->TileAt(Cell(0, 0), Cell(3, 0)));
-    hero_sprite->AddAnimation("death_left", hero_sheet->TileAt(Cell(4, 0), Cell(7, 0)));
-    hero_sprite->AddAnimation("death_right", hero_sheet->TileAt(Cell(8, 0), Cell(11, 0)));
+    hero_sprite->AddAnimation("death_down", hero_sheet->TileAt(Cell(0, 0), Cell(1, 0)));
 
     hero_sprite->AddAnimation("attack_up", hero_sheet->TileAt(Cell(12, 1), Cell(15, 1)));
     hero_sprite->AddAnimation("attack_down", hero_sheet->TileAt(Cell(0, 1), Cell(3, 1)));
@@ -63,22 +60,22 @@ BattleManager::BattleManager()
 
     Hero* hero;
 
-    hero = CreateHero(0, 0, 0);
+    hero = CreateHero(0, 0, u8"./sheet_舞女.png");
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KEnemy;
     }
 
-    hero = CreateHero(0, 1, 1);
+    hero = CreateHero(0, 1, u8"./sheet_弓骑兵.png");
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KEnemy;
     }
 
-    hero = CreateHero(9, 9, 2);
+    hero = CreateHero(9, 9, u8"./sheet_关羽骑马.png");
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KPlayer;
     }
 
-    hero = CreateHero(9, 8, 3);
+    hero = CreateHero(9, 8, u8"./sheet_张飞骑马.png");
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KPlayer;
     }
@@ -162,8 +159,10 @@ void BattleManager::EndOperationHero(Hero* hero)
 void BattleManager::OnSceneCellSelect()
 {
     //
-
+    auto cell = scene_mgr_->GetCurMouseCell();
     auto hero = scene_mgr_->GetCurMouseHero();
+
+    scene_mgr_->ShowHeroInstructions(cell);
     scene_mgr_->ShowHeroInstructions(hero);
 }
 

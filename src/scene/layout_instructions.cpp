@@ -12,8 +12,11 @@ LayoutInstructions::LayoutInstructions(QGraphicsItem* parent)
 {
     scene_mgr_ = nullptr;
 
-    brush_move_range_.setColor(QColor(80, 105, 210, 180));
+    brush_move_range_.setColor(QColor(80, 105, 210, 80));
     brush_move_range_.setStyle(Qt::SolidPattern);
+
+    brush_select_.setColor(QColor(80, 105, 210, 110));
+    brush_select_.setStyle(Qt::SolidPattern);
 }
 
 QRectF LayoutInstructions::boundingRect() const
@@ -55,6 +58,26 @@ void LayoutInstructions::ChangeSelectHero(Hero* hero)
                    cell_size, cell_size);
     }
 
+    Cell cell = hero->GetCell();
+    select_rect_ = QRect(cell.x * cell_size, cell.y * cell_size, cell_size, cell_size);
+
+    // 更新背景图片
+    UpdataTerrainBg();
+}
+
+// 切换当前选择的格子，刷新层
+void LayoutInstructions::ChangeSelectCell(const Cell& cell)
+{
+    // 无场景
+    if (!scene_mgr_) {
+        return;
+    }
+
+    // 清空之前可移动范围
+    const int cell_size = scene_mgr_->GetPathGrid()->CellSize();
+    select_rect_ = QRect(cell.x * cell_size, cell.y * cell_size, cell_size, cell_size);
+    move_range_rects_.clear();
+
     // 更新背景图片
     UpdataTerrainBg();
 }
@@ -84,16 +107,20 @@ void LayoutInstructions::UpdataTerrainBg()
     bg_pix_ = QPixmap(rect_.width(), rect_.height());
     bg_pix_.fill(Qt::transparent);
 
-    if (!move_range_rects_.empty()) {
-        QPainter painter;
-        painter.begin(&bg_pix_);
+    QPainter painter;
+    painter.begin(&bg_pix_);
 
-        // 可移动范围
-        painter.setPen(QPen(brush_move_range_.color(), 4));
-        painter.setBrush(brush_move_range_);
-        painter.drawRects(move_range_rects_);
+    // 当前选择格子
+    painter.setPen(QPen(brush_select_.color(), 4));
+    painter.setBrush(brush_select_);
+    painter.drawRect(select_rect_);
 
-        painter.end();
-    }
+    // 可移动范围
+    painter.setPen(QPen(brush_move_range_.color(), 4));
+    painter.setBrush(brush_move_range_);
+    painter.drawRects(move_range_rects_);
+
+    painter.end();
+
     update();
 }

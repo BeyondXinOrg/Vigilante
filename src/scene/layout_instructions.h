@@ -23,6 +23,7 @@ public:
 
     void SetSceneManager(SceneManager* scene_mgr);
     void ChangeSelectHero(Hero* hero = nullptr);
+    void ChangeSelectCell(const Cell &cell);
     void Resize(int width, int heigh);
 
 protected:
@@ -38,6 +39,9 @@ private:
 
     QBrush brush_move_range_;
     QVector<QRect> move_range_rects_;
+
+    QBrush brush_select_;
+    QRect select_rect_;
 };
 
 #endif // LAYOUTINSTRUCTIONS_H

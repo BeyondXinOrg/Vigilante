@@ -44,6 +44,7 @@ public:
     QSize GetViewSize() const;
 
     void ShowHeroInstructions(Hero* hero);
+    void ShowHeroInstructions(const Cell& cell);
 
 Q_SIGNALS:
     void SgnMouseRelease();
