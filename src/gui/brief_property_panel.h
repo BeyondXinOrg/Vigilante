@@ -3,6 +3,8 @@
 
 #include "gui.h"
 
+#include "scene/layout_terrain.h"
+
 #include <QBrush>
 #include <QHash>
 #include <QPen>
@@ -27,9 +29,8 @@ public:
     QGraphicsItem* GetGraphicsItem() override;
     void SetSceneManager(SceneManager* scene_mgr) override;
 
-    void DescribeHero(Hero* hero);
-    void DescribeTerrain(Hero* hero);
-    void DescribeNone();
+    void Describe(TerrainType& type, Hero* hero = nullptr);
+    void ClearDescribe();
 
 private:
     BriefPropertyItem* center_item_;

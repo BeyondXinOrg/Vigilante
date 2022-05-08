@@ -1,4 +1,4 @@
-#include "hero.h"
+﻿#include "hero.h"
 
 #include "hero/hero_sprite.h"
 #include "scene/path_grid.h"
@@ -91,6 +91,36 @@ QList<Cell> Hero::GetMovingRange() const
 {
     auto path_map = batle_mgr_->GetPathMap();
     return path_map->CanReachPath(GetCell(), base_properties_.action_force);
+}
+
+bool Hero::CanMoveToCell(Cell cell) const
+{
+    auto path_map = batle_mgr_->GetPathMap();
+    auto cells = path_map->CanReachPath(
+      GetCell(), base_properties_.action_force);
+    return cells.contains(cell);
+}
+
+void Hero::SetTargetCell(Cell cell)
+{
+    target_cell_ = cell;
+}
+
+Cell Hero::GetTargetCell() const
+{
+    return target_cell_;
+}
+
+QString Hero::BasePropertiesStr() const
+{
+    QString str;
+
+    str += QString(u8"攻击:%1      ").arg(base_properties_.physical_attack);
+    str += QString(u8"防御:%1  \n").arg(base_properties_.physical_defense);
+    str += QString(u8"敏捷:%1      ").arg(base_properties_.agile);
+    str += QString(u8"行动力:%1  ").arg(base_properties_.action_force);
+
+    return str;
 }
 
 void Hero::InitialState()

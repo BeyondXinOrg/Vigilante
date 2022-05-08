@@ -3,6 +3,7 @@
 
 class SceneManager;
 class BriefPropertyPanel;
+class GUIlocationHero;
 class CellGrid;
 class Hero;
 
@@ -35,6 +36,7 @@ private:
 private:
     SceneManager* scene_mgr_;
     BriefPropertyPanel* ui_brief_property_;
+    GUIlocationHero* ui_location_hero_;
 
     CellGrid* cell_grid_;
 

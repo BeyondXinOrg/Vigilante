@@ -37,6 +37,7 @@ public:
     void SetSceneManager(SceneManager* data);
     void SetTileSheetData(TileSheet* data);
     QList<Cell> GetWallTerrainCell() const;
+    TerrainType GetTerrainType(const Cell& cell);
 
 protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* item,

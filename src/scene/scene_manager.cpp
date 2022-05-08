@@ -140,6 +140,12 @@ Hero* SceneManager::GetCurMouseHero() const
     return nullptr;
 }
 
+// 获取格子地形
+TerrainType SceneManager::GetTerrainType(const Cell& cell)
+{
+    return lay_terrain_->GetTerrainType(cell);
+}
+
 void SceneManager::AddGui(Gui* gui)
 {
     view_->AddGui(gui);
@@ -149,6 +155,13 @@ void SceneManager::AddGui(Gui* gui)
 QSize SceneManager::GetViewSize() const
 {
     return view_->size();
+}
+
+void SceneManager::MoveCamCenterToHero(Hero* hero)
+{
+    if (hero) {
+        view_->SetCenterCamPos(path_grid_->CellToPoint(hero->GetCell()));
+    }
 }
 
 void SceneManager::ShowHeroInstructions(Hero* hero)

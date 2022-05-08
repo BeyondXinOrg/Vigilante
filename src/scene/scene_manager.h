@@ -2,6 +2,7 @@
 #define SceneManager_H
 
 #include "hero/hero.h"
+#include "scene/layout_terrain.h"
 
 #include <QObject>
 
@@ -38,11 +39,13 @@ public:
 
     Cell GetCurMouseCell() const;
     Hero* GetCurMouseHero() const;
+    TerrainType GetTerrainType(const Cell& cell);
 
     void AddGui(Gui* gui);
 
     QSize GetViewSize() const;
 
+    void MoveCamCenterToHero(Hero* hero);
     void ShowHeroInstructions(Hero* hero);
     void ShowHeroInstructions(const Cell& cell);
 

@@ -3,6 +3,7 @@
 #include "data/cell_grid.h"
 #include "gui/brief_property_panel.h"
 #include "gui/gui.h"
+#include "gui/gui_location_hero.h"
 #include "hero/hero.h"
 #include "hero/hero_sheet.h"
 #include "hero/hero_sprite.h"
@@ -54,6 +55,10 @@ BattleManager::BattleManager()
 
     ui_brief_property_ = new BriefPropertyPanel;
     scene_mgr_->AddGui(ui_brief_property_);
+
+    ui_location_hero_ = new GUIlocationHero;
+    scene_mgr_->AddGui(ui_location_hero_);
+    ui_location_hero_->SetTargetHero();
 
     battle_timer_ = new QTimer(this);
     InitConnect();
@@ -108,6 +113,7 @@ void BattleManager::BattleTimeAdvance()
         if (action_progress >= 100) { // 行动进度到达终点
 
             cur_hero_ = hero;
+            select_hero_ = hero;
             cur_hero_->ActionTimeReset(); // 行动进度清空
 
             if (KPlayer == i.value()) {
@@ -125,11 +131,16 @@ void BattleManager::WaitOperationHero(Hero* hero)
 {
     // 暂停时间
     battle_timer_->stop();
+
     // 调整当前英雄状态
     hero->SetBattleState(KSelectionDestination);
 
     // 计算、显示当前操作英雄可移动路径
+    scene_mgr_->MoveCamCenterToHero(cur_hero_);
     scene_mgr_->ShowHeroInstructions(cur_hero_);
+    ui_location_hero_->SetTargetHero(cur_hero_);
+    auto terrain_type = scene_mgr_->GetTerrainType(cur_hero_->GetCell());
+    ui_brief_property_->Describe(terrain_type, cur_hero_);
 
     //    auto cur_hero_move_range_ = hero->GetMovingRange();
 
@@ -158,12 +169,53 @@ void BattleManager::EndOperationHero(Hero* hero)
 // 场景中点击
 void BattleManager::OnSceneCellSelect()
 {
-    //
-    auto cell = scene_mgr_->GetCurMouseCell();
-    auto hero = scene_mgr_->GetCurMouseHero();
+    auto select_cell = scene_mgr_->GetCurMouseCell();
+    auto target_hero = scene_mgr_->GetCurMouseHero();
+    auto select_terrain_type = scene_mgr_->GetTerrainType(select_cell);
 
-    scene_mgr_->ShowHeroInstructions(cell);
-    scene_mgr_->ShowHeroInstructions(hero);
+    bool show_moverange = true;
+    bool change_moverange = true;
+    bool change_select_cell = true;
+
+    if (!select_hero_) {
+        select_hero_ = target_hero;
+    } else if (select_hero_ == cur_hero_) { // 选择英雄和本回合英雄相同
+        auto battle_state = cur_hero_->GetBattleState();
+
+        if (battle_state == KSelectionDestination) {
+            if (cur_hero_->CanMoveToCell(select_cell)) {
+                cur_hero_->SetTargetCell(select_cell);
+                cur_hero_->SetBattleState(KConfirmDestination);
+                change_select_cell = false;
+                change_moverange = false;
+            }
+        } else if (battle_state == KConfirmDestination) {
+            if (select_cell == cur_hero_->GetTargetCell()) {
+                cur_hero_->SetCell(select_cell);
+                EndOperationHero(cur_hero_);
+                show_moverange = false;
+            } else if (cur_hero_->CanMoveToCell(select_cell)) {
+                cur_hero_->SetTargetCell(select_cell);
+                cur_hero_->SetBattleState(KConfirmDestination);
+                change_select_cell = false;
+                change_moverange = false;
+            }
+        }
+    }
+
+    ui_brief_property_->Describe(select_terrain_type, target_hero);
+
+    if (change_select_cell) {
+        scene_mgr_->ShowHeroInstructions(select_cell);
+    }
+
+    if (show_moverange) {
+        if (change_moverange) {
+            scene_mgr_->ShowHeroInstructions(target_hero);
+        } else {
+            scene_mgr_->ShowHeroInstructions(select_hero_);
+        }
+    }
 }
 
 //// 更新阵营边框

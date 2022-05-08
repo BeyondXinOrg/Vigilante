@@ -1,4 +1,4 @@
-#ifndef HERO_H
+﻿#ifndef HERO_H
 #define HERO_H
 
 #include "data/cell.h"
@@ -29,6 +29,7 @@ enum BattleState // 战斗状态
 {
     KEnergyStorage, // 蓄力（跑进度条）
     KSelectionDestination, // 选择移动位置
+    KConfirmDestination, // 选择移动位置
     KSelectionTarget, // 选择对象(攻击、用药)
 };
 
@@ -55,13 +56,18 @@ public:
 
     // 获取当前可移动范围
     QList<Cell> GetMovingRange() const;
+    bool CanMoveToCell(Cell cell) const;
+    void SetTargetCell(Cell cell);
+    Cell GetTargetCell() const;
+
+    QString BasePropertiesStr() const;
 
 private:
     void InitialState();
     void TmpUpState();
 
 private:
-    Cell cell_;
+    Cell cell_, target_cell_;
     HeroSprite* sprite_;
 
     HeroProperties base_properties_; // 基本属性

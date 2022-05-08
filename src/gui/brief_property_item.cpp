@@ -1,5 +1,6 @@
 ﻿#include "brief_property_item.h"
 
+#include <QDebug>
 #include <QPainter>
 
 BriefPropertyItem::BriefPropertyItem(QGraphicsItem* parent)
@@ -7,8 +8,15 @@ BriefPropertyItem::BriefPropertyItem(QGraphicsItem* parent)
 {
     rect_.setRect(0, 0, 750, 150);
 
-    title_ = u8"平原";
-    content_ = u8"【骑兵】攻击提升";
+    title_ = "aaa";
+    content_ = "aaa";
+}
+
+void BriefPropertyItem::UpdataInfo(const QString& title, const QString& content)
+{
+    title_ = title;
+    content_ = content;
+    update();
 }
 
 QRectF BriefPropertyItem::boundingRect() const
@@ -35,8 +43,7 @@ void BriefPropertyItem::paint(
     painter->drawText(60, -15, title_);
     font.setPointSize(20);
     painter->setFont(font);
-    painter->drawText(rect_.adjusted(10, 10, -10, -10),
-                      Qt::TextWordWrap | Qt::AlignLeft, content_);
+    painter->drawText(rect_.adjusted(10, 10, -10, -10), Qt::TextWordWrap | Qt::AlignLeft, content_);
 
     painter->restore();
 }

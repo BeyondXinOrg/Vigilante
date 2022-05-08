@@ -93,6 +93,11 @@ QList<Cell> LayoutTerrain::GetWallTerrainCell() const
     return cell;
 }
 
+TerrainType LayoutTerrain::GetTerrainType(const Cell& cell)
+{
+    return cells_type_.value(cell);
+}
+
 RandomForest::RandomForest()
 {
     QList<Cell> tree_type;
