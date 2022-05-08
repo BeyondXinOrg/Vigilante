@@ -4,6 +4,7 @@
 #include "gui/brief_property_panel.h"
 #include "gui/gui.h"
 #include "hero/hero.h"
+#include "hero/hero_sheet.h"
 #include "hero/hero_sprite.h"
 #include "scene/layout_terrain.h"
 #include "scene/path_grid.h"
@@ -16,13 +17,35 @@
 #include <QThread>
 #include <QTimer>
 
-Hero* GetHero(int x, int y, int sprite_id)
+Hero* CreateHero(int x, int y, int sprite_id)
 {
     Hero* hero = new Hero();
+    HeroSheet* hero_sheet = new HeroSheet("./b.png", 16, 3, 64, 64);
     HeroSprite* hero_sprite = new HeroSprite();
-    hero_sprite->SetFixedFrame(
-      QPixmap("./a.png").copy(sprite_id * 200, 0, 200, 200).scaled(80, 80));
+
+    hero_sprite->AddAnimation("death_up", hero_sheet->TileAt(Cell(12, 0), Cell(15, 0)));
+    hero_sprite->AddAnimation("death_down", hero_sheet->TileAt(Cell(0, 0), Cell(3, 0)));
+    hero_sprite->AddAnimation("death_left", hero_sheet->TileAt(Cell(4, 0), Cell(7, 0)));
+    hero_sprite->AddAnimation("death_right", hero_sheet->TileAt(Cell(8, 0), Cell(11, 0)));
+
+    hero_sprite->AddAnimation("attack_up", hero_sheet->TileAt(Cell(12, 1), Cell(15, 1)));
+    hero_sprite->AddAnimation("attack_down", hero_sheet->TileAt(Cell(0, 1), Cell(3, 1)));
+    hero_sprite->AddAnimation("attack_left", hero_sheet->TileAt(Cell(4, 1), Cell(7, 1)));
+    hero_sprite->AddAnimation("attack_right", hero_sheet->TileAt(Cell(8, 1), Cell(11, 1)));
+
+    hero_sprite->AddAnimation("move_up", hero_sheet->TileAt(Cell(12, 2), Cell(15, 2)));
+    hero_sprite->AddAnimation("move_down", hero_sheet->TileAt(Cell(0, 2), Cell(3, 2)));
+    hero_sprite->AddAnimation("move_left", hero_sheet->TileAt(Cell(4, 2), Cell(7, 2)));
+    hero_sprite->AddAnimation("move_right", hero_sheet->TileAt(Cell(8, 2), Cell(11, 2)));
+
+    hero_sprite->AddAnimation("stand_up", hero_sheet->TileAt(Cell(12, 2), Cell(13, 2)));
+    hero_sprite->AddAnimation("stand_down", hero_sheet->TileAt(Cell(0, 2), Cell(1, 2)));
+    hero_sprite->AddAnimation("stand_left", hero_sheet->TileAt(Cell(4, 2), Cell(5, 2)));
+    hero_sprite->AddAnimation("stand_right", hero_sheet->TileAt(Cell(8, 2), Cell(9, 2)));
+
     hero->SetHeroSprite(hero_sprite);
+    hero_sprite->PlayAnimation("stand_down");
+
     hero->SetCell(Cell(x, y));
     return hero;
 }
@@ -40,22 +63,22 @@ BattleManager::BattleManager()
 
     Hero* hero;
 
-    hero = GetHero(0, 0, 0);
+    hero = CreateHero(0, 0, 0);
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KEnemy;
     }
 
-    hero = GetHero(0, 1, 1);
+    hero = CreateHero(0, 1, 1);
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KEnemy;
     }
 
-    hero = GetHero(9, 9, 2);
+    hero = CreateHero(9, 9, 2);
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KPlayer;
     }
 
-    hero = GetHero(9, 8, 3);
+    hero = CreateHero(9, 8, 3);
     if (scene_mgr_->AddHero(hero)) {
         heros_[hero] = KPlayer;
     }

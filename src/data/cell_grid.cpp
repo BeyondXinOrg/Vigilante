@@ -11,7 +11,7 @@ CellGrid::CellGrid(int num_cols, int num_rows)
 // 所有像素块节点
 QList<Cell> CellGrid::Cells() const
 {
-    return Cells(Cell(0, 0), Cell(num_cols_, num_rows_));
+    return Cells(Cell(0, 0), Cell(num_cols_ - 1, num_rows_ - 1));
 }
 
 // 由左上角节点和右下角节点定义的矩形区域包围的节点
