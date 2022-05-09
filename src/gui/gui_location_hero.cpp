@@ -24,7 +24,7 @@ void GUIlocationHero::SetSceneManager(SceneManager* scene_mgr)
 {
     scene_mgr_ = scene_mgr;
     location_btn_->setVisible(false);
-    location_btn_->setPos(QPointF(100, 1080 - 300));
+    location_btn_->setPos(QPointF(50, 1080 - 300));
 }
 
 void GUIlocationHero::SetTargetHero(Hero* target_hero)

@@ -4,6 +4,7 @@
 #include "gui/brief_property_panel.h"
 #include "gui/gui.h"
 #include "gui/gui_location_hero.h"
+#include "gui/gui_skip_round.h"
 #include "hero/hero.h"
 #include "hero/hero_sheet.h"
 #include "hero/hero_sprite.h"
@@ -55,6 +56,11 @@ BattleManager::BattleManager()
 
     ui_brief_property_ = new BriefPropertyPanel;
     scene_mgr_->AddGui(ui_brief_property_);
+
+    ui_skip_round_ = new GUISkipRound;
+    scene_mgr_->AddGui(ui_skip_round_);
+    connect(ui_skip_round_, &GUISkipRound::SgnSkipRound,
+            this, &BattleManager::SkipRound);
 
     ui_location_hero_ = new GUIlocationHero;
     scene_mgr_->AddGui(ui_location_hero_);
@@ -108,20 +114,28 @@ void BattleManager::BattleTimeAdvance()
     while (i != heros_.end()) {
         auto hero = i.key();
 
-        // 英雄行动进度推进
-        int action_progress = hero->ActionTimeAdvance();
+        int action_progress = hero->GetActionProgess();
         if (action_progress >= 100) { // 行动进度到达终点
 
             cur_hero_ = hero;
             select_hero_ = hero;
-            cur_hero_->ActionTimeReset(); // 行动进度清空
 
             if (KPlayer == i.value()) {
                 WaitOperationHero(cur_hero_);
             } else if (KEnemy == i.value()) {
                 WaitOperationHero(cur_hero_);
             }
+
+            return;
         }
+        ++i;
+    }
+
+    i = heros_.begin();
+    while (i != heros_.end()) {
+        auto hero = i.key();
+        // 英雄行动进度推进
+        hero->ActionTimeAdvance();
         ++i;
     }
 }
@@ -131,6 +145,7 @@ void BattleManager::WaitOperationHero(Hero* hero)
 {
     // 暂停时间
     battle_timer_->stop();
+    ui_skip_round_->SetVisable(true);
 
     // 调整当前英雄状态
     hero->SetBattleState(KSelectionDestination);
@@ -138,32 +153,37 @@ void BattleManager::WaitOperationHero(Hero* hero)
     // 计算、显示当前操作英雄可移动路径
     scene_mgr_->MoveCamCenterToHero(cur_hero_);
     scene_mgr_->ShowHeroInstructions(cur_hero_);
+
     ui_location_hero_->SetTargetHero(cur_hero_);
+
     auto terrain_type = scene_mgr_->GetTerrainType(cur_hero_->GetCell());
     ui_brief_property_->Describe(terrain_type, cur_hero_);
-
-    //    auto cur_hero_move_range_ = hero->GetMovingRange();
-
-    //    QApplication::processEvents();
-    //    QThread::msleep(500);
-    //    EndOperationHero(hero);
 }
 
 // 等待AI操作英雄
 void BattleManager::WaitAIOperationHero(Hero* hero)
 {
+
     battle_timer_->stop();
+    ui_skip_round_->SetVisable(true);
 }
 
 // 结束英雄操作，时间继续推进
 void BattleManager::EndOperationHero(Hero* hero)
 {
     // 调整复位英雄状态
-    hero->SetBattleState(KEnergyStorage);
-    // 清空英雄可移动路径
+    cur_hero_->SetBattleState(KEnergyStorage);
+    cur_hero_->ActionTimeReset(); // 行动进度清空
+    // 清空英雄
     cur_hero_ = nullptr;
     // 时间
-    battle_timer_->start();
+    ui_skip_round_->SetVisable(false);
+    battle_timer_->start(20);
+}
+
+void BattleManager::SkipRound()
+{
+    EndOperationHero(cur_hero_);
 }
 
 // 场景中点击

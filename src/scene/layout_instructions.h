@@ -23,11 +23,12 @@ public:
 
     void SetSceneManager(SceneManager* scene_mgr);
     void ChangeSelectHero(Hero* hero = nullptr);
-    void ChangeSelectCell(const Cell &cell);
+    void ChangeSelectCell(const Cell& cell);
     void Resize(int width, int heigh);
 
 protected:
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item,
+    void paint(QPainter* painter,
+               const QStyleOptionGraphicsItem* item,
                QWidget* widget) override;
     void UpdataTerrainBg();
 

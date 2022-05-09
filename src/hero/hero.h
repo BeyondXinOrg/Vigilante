@@ -48,7 +48,8 @@ public:
     void SetCell(const Cell& new_cell);
     Cell GetCell() const;
     // 跑进度条
-    double ActionTimeAdvance();
+    void ActionTimeAdvance();
+    double GetActionProgess();
     void ActionTimeReset();
     // 战斗状态
     void SetBattleState(const BattleState& state);
@@ -74,7 +75,7 @@ private:
     HeroState hero_state_; //  英雄状态
     BattleState battle_state_; // 战斗状态
 
-    SceneManager* batle_mgr_;
+    SceneManager* scene_mgr_;
 };
 
 inline uint qHash(const QPointer<Hero>& key, uint seed)

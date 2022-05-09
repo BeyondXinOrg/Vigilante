@@ -132,7 +132,7 @@ void View::mouseReleaseEvent(QMouseEvent* event)
     // 左键松开
     auto mouse_buttons = event->button();
     if (mouse_buttons == Qt::LeftButton
-        && (press_pos_ - event->pos()).manhattanLength() < 40) {
+        && (press_pos_ - event->pos()).manhattanLength() < 10) {
         scene_mgr_->SgnMouseRelease();
     }
 }

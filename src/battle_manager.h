@@ -6,6 +6,7 @@ class BriefPropertyPanel;
 class GUIlocationHero;
 class CellGrid;
 class Hero;
+class GUISkipRound;
 
 #include <QHash>
 #include <QPointer>
@@ -27,9 +28,11 @@ public:
 private:
     void InitConnect();
     void BattleTimeAdvance();
+
     void WaitOperationHero(Hero* hero);
     void WaitAIOperationHero(Hero* hero);
     void EndOperationHero(Hero* hero);
+    void SkipRound();
 
     void OnSceneCellSelect();
 
@@ -37,6 +40,7 @@ private:
     SceneManager* scene_mgr_;
     BriefPropertyPanel* ui_brief_property_;
     GUIlocationHero* ui_location_hero_;
+    GUISkipRound* ui_skip_round_;
 
     CellGrid* cell_grid_;
 
