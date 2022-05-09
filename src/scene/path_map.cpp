@@ -95,3 +95,34 @@ QList<Cell> PathMap::CanReachPath(const Cell& from, const int& power) const
 {
     return PartGridToGraph(from, power).GetPTCells(from, power);
 }
+
+// 返回移动路径
+QList<Cell> PathMap::MovingPath(
+  const Cell& from, const int& power, const Cell& to)
+{
+    auto cells = PartGridToGraph(from, power).GetPTCells(from, power);
+    cells << from;
+
+    Graph g;
+    // 增加节点
+    g.AddCell(from);
+    foreach (auto cell, cells) {
+        if (!Filled(cell)) {
+            g.AddCell(cell);
+        }
+    }
+
+    // 在未填充的节点之间添加所有边
+    foreach (Cell node, g.Cells()) {
+        // 获取节点的所有邻居
+        QList<Cell> neighbors = grid_->Cell4Neighbors(node);
+        foreach (Cell neighbor, neighbors) {
+            if (!Filled(neighbor) && g.Contains(neighbor)) {
+                g.AddEdge(node, neighbor, 1);
+                g.AddEdge(neighbor, node, 1);
+            }
+        }
+    }
+
+    return g.ShortesPath(from, to);
+}

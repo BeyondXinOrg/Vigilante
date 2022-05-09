@@ -27,10 +27,10 @@ struct HeroState // 英雄状态
 
 enum BattleState // 战斗状态
 {
-    KEnergyStorage, // 蓄力（跑进度条）
-    KSelectionDestination, // 选择移动位置
-    KConfirmDestination, // 选择移动位置
-    KSelectionTarget, // 选择对象(攻击、用药)
+    KEnergy_Storage, // 蓄力（跑进度条）
+    KSelection_Destination, // 选择移动位置
+    KConfirm_Destination, // 确认移动位置
+    KSelection_Hero, // 选择对象(攻击、用药)
 };
 
 class Hero : public QObject
@@ -45,6 +45,7 @@ public:
     void SetBattle(SceneManager* mgr);
 
     // 设置位置
+    void MoveToCell(const Cell& new_cell);
     void SetCell(const Cell& new_cell);
     Cell GetCell() const;
     // 跑进度条

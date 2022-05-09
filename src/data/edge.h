@@ -1,4 +1,4 @@
-#ifndef EDGE_H
+﻿#ifndef EDGE_H
 #define EDGE_H
 
 #include "data/cell.h"
@@ -39,6 +39,15 @@ inline bool operator==(const Edge& lhs, const Edge& rhs)
 inline bool operator!=(const Edge& lhs, const Edge& rhs)
 {
     return !(operator==(lhs, rhs));
+}
+
+inline QDebug operator<<(QDebug dbg, const Edge& edge)
+{
+    return dbg << QString("(%1,%2)~(%3,%4)")
+                    .arg(edge.from.x)
+                    .arg(edge.from.y)
+                    .arg(edge.to.x)
+                    .arg(edge.to.y);
 }
 
 #endif // EDGE_H

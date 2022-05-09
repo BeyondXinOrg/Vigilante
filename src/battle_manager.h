@@ -45,8 +45,8 @@ private:
     CellGrid* cell_grid_;
 
     QHash<Hero*, Camp> heros_;
+    QPointer<Hero> cur_round_hero_;
     QPointer<Hero> cur_hero_;
-    QPointer<Hero> select_hero_;
 
     QTimer* battle_timer_;
 };

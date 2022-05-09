@@ -18,6 +18,7 @@ public:
 
     Graph PartGridToGraph(const Cell& from, const int& power) const;
     QList<Cell> CanReachPath(const Cell& from, const int& power) const;
+    QList<Cell> MovingPath(const Cell& from, const int& power, const Cell& to);
 
 private:
     CellGrid* grid_;

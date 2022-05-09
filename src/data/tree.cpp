@@ -1,4 +1,4 @@
-#include "tree.h"
+﻿#include "tree.h"
 
 SPTree::SPTree(const Cell& root)
   : graph_()
@@ -43,6 +43,7 @@ void SPTree::AddChild(
 QList<Cell> SPTree::DFS(
   const Cell& cur_node, const Cell& target_node, QList<Cell> path) const
 {
+
     // 标记已访问过的向量
     DFS_Visit(cur_node);
 
@@ -52,13 +53,12 @@ QList<Cell> SPTree::DFS(
         return path;
     }
 
-    // 如果节点没有任何未访问的子节点
-    // 将其删除，在路径中的前一个节点上运行dfs
+    // 如果节点没有任何未访问的子节点，请将其删除，然后在路径中的前一个节点上运行dfs
     if (!DFS_HasUnvisitedChild(cur_node)) {
         Cell last_node = path.back();
         path.pop_back();
         return DFS(last_node, target_node, path);
-    } else {
+    } else { // 如果节点有未访问的子节点，请选择一个并在其上运行dfs
         path.push_back(cur_node);
         Cell unvisited = DFS_FirstUnvisitedChild(cur_node);
         return DFS(unvisited, target_node, path);
@@ -77,16 +77,16 @@ bool SPTree::DFS_IsVisited(const Cell& node) const
     return dfs_visited_nodes_.contains(node);
 }
 
-// 节点是否有子节点
+// 如果指定节点至少有一个未访问的子节点，则返回true。
 bool SPTree::DFS_HasUnvisitedChild(const Cell& parent_node) const
 {
     QList<Cell> children = graph_.OutgoingCells(parent_node);
     foreach (Cell child, children) {
-        if (DFS_IsVisited(child)) {
-            return false;
+        if (!DFS_IsVisited(child)) {
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 // 返回第一个未访问过的节点

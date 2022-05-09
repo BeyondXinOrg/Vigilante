@@ -31,6 +31,20 @@ void Hero::SetBattle(SceneManager* mgr)
     SetCell(cell_);
 }
 
+// 移动到位置
+void Hero::MoveToCell(const Cell& new_cell)
+{
+    auto path_map = scene_mgr_->GetPathMap();
+    auto cells = path_map->MovingPath(GetCell(), base_properties_.action_force, new_cell);
+    qDebug() << cells;
+
+    cell_ = new_cell;
+    if (scene_mgr_ && sprite_ != nullptr) {
+        sprite_->SetSpritePos(scene_mgr_->GetPathGrid()->CellToPoint(cell_));
+        scene_mgr_->UpdataPathMap();
+    }
+}
+
 void Hero::SetHeroSprite(HeroSprite* sprite)
 {
     //    if (map_) { // 如果实体已在地图中
@@ -144,7 +158,7 @@ void Hero::InitialState()
     hero_state_.action_progress = 0;
 
     // 人物战斗状态
-    battle_state_ = KEnergyStorage;
+    battle_state_ = KEnergy_Storage;
 }
 
 // 临时更新状态
