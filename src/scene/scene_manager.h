@@ -16,7 +16,7 @@ class CellGrid;
 class PathGrid;
 class PathMap;
 class Gui;
-class LayoutInstructions;
+class LayoutColourfulCell;
 
 class SceneManager : public QObject
 {
@@ -39,15 +39,15 @@ public:
 
     Cell GetCurMouseCell() const;
     Hero* GetCurMouseHero() const;
-    TerrainType GetTerrainType(const Cell& cell);
+    Hero* GetCurMouseHero(const Cell& cell) const;
+    TerrainType GetTerrainType(const Cell& cell) const;
+    LayoutColourfulCell* GetLayoutColourfulCell() const;
 
     void AddGui(Gui* gui);
 
     QSize GetViewSize() const;
 
     void MoveCamCenterToHero(Hero* hero);
-    void ShowHeroInstructions(Hero* hero);
-    void ShowHeroInstructions(const Cell& cell);
 
 Q_SIGNALS:
     void SgnMouseRelease();
@@ -66,7 +66,7 @@ private:
     PathMap* path_map_;
 
     LayoutTerrain* lay_terrain_;
-    LayoutInstructions* lay_instructions_;
+    LayoutColourfulCell* lay_colourful_cell_;
     QGraphicsRectItem* lay_heros_;
 
     QSet<Hero*> heros_;

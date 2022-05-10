@@ -17,6 +17,9 @@ public:
 
     void SetTargetHero(Hero* target_hero = nullptr);
 
+Q_SIGNALS:
+    void SgnClickedLocation();
+
 private:
     void OnLoactionHero(GuiPanel* panel, QPointF pos, int button);
 

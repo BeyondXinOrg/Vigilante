@@ -12,6 +12,7 @@ struct HeroProperties
 {
     short action_force { 0 }; // 行动力
     short agile { 0 }; // 敏捷
+    short speed { 0 }; // 速度
 
     short physical_attack { 0 }; // 物理攻击
     short physical_defense { 0 }; // 物理防御
@@ -58,6 +59,7 @@ public:
 
     // 获取当前可移动范围
     QList<Cell> GetMovingRange() const;
+    QList<Cell> GetMovingTrack(const Cell& new_cell) const;
     bool CanMoveToCell(Cell cell) const;
     void SetTargetCell(Cell cell);
     Cell GetTargetCell() const;

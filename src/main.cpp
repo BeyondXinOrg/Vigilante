@@ -1,14 +1,14 @@
-#include <QApplication>
+﻿#include <QApplication>
 
-#include "battle_manager.h"
+#include "warfare/warfare.h"
 
 int main(int argc, char* argv[])
 {
 
     QApplication a(argc, argv);
 
-    BattleManager battle;
-    battle.Launch();
+    Warfare warfare;
+    warfare.BeginWar();
 
     return a.exec();
 }

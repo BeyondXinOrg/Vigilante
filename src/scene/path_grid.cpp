@@ -1,7 +1,6 @@
 ﻿#include "path_grid.h"
 
 #include <QPointF>
-#include <QRandomGenerator>
 #include <QRectF>
 
 PathGrid::PathGrid(CellGrid* grid, int cell_size)

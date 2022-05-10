@@ -2,7 +2,7 @@
 
 #include "data/cell_grid.h"
 #include "gui/gui.h"
-#include "scene/layout_instructions.h"
+#include "scene/layout_colourful_cell.h"
 #include "scene/layout_terrain.h"
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
@@ -20,7 +20,7 @@ SceneManager::SceneManager(
   , path_map_(new PathMap(cell_grid_))
 
   , lay_terrain_(new LayoutTerrain())
-  , lay_instructions_(new LayoutInstructions())
+  , lay_colourful_cell_(new LayoutColourfulCell())
   , lay_heros_(new QGraphicsRectItem())
 {
     view_->SetSceneManager(this);
@@ -34,10 +34,10 @@ SceneManager::SceneManager(
     lay_terrain_->SetSceneManager(this);
     lay_terrain_->Resize(path_grid_->Width(), path_grid_->Height());
 
-    lay_instructions_->SetSceneManager(this);
+    lay_colourful_cell_->SetSceneManager(this);
 
     scene_->addItem(lay_terrain_);
-    scene_->addItem(lay_instructions_);
+    scene_->addItem(lay_colourful_cell_);
     scene_->addItem(lay_heros_);
 
     QBrush bb;
@@ -140,10 +140,26 @@ Hero* SceneManager::GetCurMouseHero() const
     return nullptr;
 }
 
+Hero* SceneManager::GetCurMouseHero(const Cell& cell) const
+{
+    foreach (auto hero, heros_) {
+        if (hero->GetCell() == cell) {
+            return hero;
+        }
+    }
+    return nullptr;
+}
+
 // 获取格子地形
-TerrainType SceneManager::GetTerrainType(const Cell& cell)
+TerrainType SceneManager::GetTerrainType(const Cell& cell) const
 {
     return lay_terrain_->GetTerrainType(cell);
+}
+
+// 先直接获取层出去
+LayoutColourfulCell* SceneManager::GetLayoutColourfulCell() const
+{
+    return lay_colourful_cell_;
 }
 
 void SceneManager::AddGui(Gui* gui)
@@ -162,16 +178,6 @@ void SceneManager::MoveCamCenterToHero(Hero* hero)
     if (hero) {
         view_->SetCenterCamPos(path_grid_->CellToPoint(hero->GetCell()));
     }
-}
-
-void SceneManager::ShowHeroInstructions(Hero* hero)
-{
-    lay_instructions_->ChangeSelectHero(hero);
-}
-
-void SceneManager::ShowHeroInstructions(const Cell& cell)
-{
-    lay_instructions_->ChangeSelectCell(cell);
 }
 
 void SceneManager::InitConnect()

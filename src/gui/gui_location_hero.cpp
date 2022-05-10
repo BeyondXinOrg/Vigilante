@@ -42,6 +42,8 @@ void GUIlocationHero::OnLoactionHero(
     Q_UNUSED(pos)
     Q_UNUSED(button)
 
-    scene_mgr_->ShowHeroInstructions(target_hero_);
-    scene_mgr_->MoveCamCenterToHero(target_hero_);
+    emit SgnClickedLocation();
+
+    //    scene_mgr_->ShowHeroInstructions(target_hero_);
+    //    scene_mgr_->MoveCamCenterToHero(target_hero_);
 }

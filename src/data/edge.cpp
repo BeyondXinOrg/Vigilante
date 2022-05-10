@@ -1,4 +1,4 @@
-#include "edge.h"
+﻿#include "edge.h"
 
 // 边缘放在地图上
 Edge::Edge()

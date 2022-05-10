@@ -1,6 +1,4 @@
-#include "tile_sheet.h"
-
-#include <QRandomGenerator>
+﻿#include "tile_sheet.h"
 
 TileSheet::TileSheet(
   QString file_path, int num_xtiles, int num_ytiles,

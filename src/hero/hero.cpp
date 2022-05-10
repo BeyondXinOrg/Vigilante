@@ -34,10 +34,6 @@ void Hero::SetBattle(SceneManager* mgr)
 // 移动到位置
 void Hero::MoveToCell(const Cell& new_cell)
 {
-    auto path_map = scene_mgr_->GetPathMap();
-    auto cells = path_map->MovingPath(GetCell(), base_properties_.action_force, new_cell);
-    qDebug() << cells;
-
     cell_ = new_cell;
     if (scene_mgr_ && sprite_ != nullptr) {
         sprite_->SetSpritePos(scene_mgr_->GetPathGrid()->CellToPoint(cell_));
@@ -112,11 +108,19 @@ QList<Cell> Hero::GetMovingRange() const
     return path_map->CanReachPath(GetCell(), base_properties_.action_force);
 }
 
+QList<Cell> Hero::GetMovingTrack(const Cell& new_cell) const
+{
+    auto path_map = scene_mgr_->GetPathMap();
+    auto cells = path_map->MovingPath(
+      GetCell(), base_properties_.action_force, new_cell);
+
+    return cells;
+}
+
 bool Hero::CanMoveToCell(Cell cell) const
 {
     auto path_map = scene_mgr_->GetPathMap();
-    auto cells = path_map->CanReachPath(
-      GetCell(), base_properties_.action_force);
+    auto cells = path_map->CanReachPath(GetCell(), base_properties_.action_force);
     return cells.contains(cell);
 }
 
