@@ -2,6 +2,7 @@
 
 #include "gui/gui_location_hero.h"
 #include "gui/gui_skip_round.h"
+#include "hero/hc_path_mover.h"
 #include "scene/layout_colourful_cell.h"
 #include "scene/scene_manager.h"
 
@@ -11,15 +12,17 @@ OperateManager::OperateManager(SceneManager* scene_mgr)
     ui_location_hero_ = new GUIlocationHero;
     scene_mgr_->AddGui(ui_location_hero_);
     ui_location_hero_->SetTargetHero();
-
-    ui_skip_round_ = new GUISkipRound;
-    scene_mgr_->AddGui(ui_skip_round_);
-
     connect(ui_location_hero_, &GUIlocationHero::SgnClickedLocation,
             this, &OperateManager::SgnLocationOperateHero);
 
+    ui_skip_round_ = new GUISkipRound;
+    scene_mgr_->AddGui(ui_skip_round_);
     connect(ui_skip_round_, &GUISkipRound::SgnSkipRound,
             this, &OperateManager::SgnEndOperate);
+
+    hc_path_mover_ = new HCPathMover;
+    connect(hc_path_mover_, &HCPathMover::SgnSuccesfullyMoved,
+            this, &OperateManager::OnHeroEndMoving);
 }
 
 void OperateManager::SetOperateHero(Hero* hero)
@@ -62,7 +65,7 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
 
             if (target_cell_ == click_cell) { // 确认移动
                 state_ = kOPE_Moving;
-                operate_hero_->MoveToCell(click_cell);
+                //                operate_hero_->MoveToCell(click_cell);
             } else if (operate_hero_->CanMoveToCell(click_cell)) { // 是否可以移动
                 target_cell_ = click_cell;
                 state_ = kREL_Select_Move;
@@ -87,11 +90,31 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
     }
 
     if (state_ == kOPE_Moving) {
-        emit SgnEndOperate();
+        scene_mgr_->GetLayoutColourfulCell()->ClearSelect();
+
+        hc_path_mover_->SetHeroControlled(operate_hero_);
+        hc_path_mover_->MoveHero(operate_hero_->GetMovingTrack(target_cell_));
     }
 }
 
 bool OperateManager::CanOperate() const
 {
     return can_operate_;
+}
+
+bool OperateManager::CanHandelClick() const
+{
+    if (state_ == kOPE_Moving || state_ == kOPE_Attack) {
+        return false;
+    }
+    return true;
+}
+
+void OperateManager::OnHeroEndMoving(HCPathMover* by_mover)
+{
+    if (by_mover == hc_path_mover_
+        && state_ == kOPE_Moving) {
+        state_ = kOPE_None;
+        emit SgnEndOperate();
+    }
 }

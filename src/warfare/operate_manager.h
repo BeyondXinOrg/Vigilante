@@ -10,6 +10,7 @@ class QTimer;
 class SceneManager;
 class GUIlocationHero;
 class GUISkipRound;
+class HCPathMover;
 
 class OperateManager : public QObject
 {
@@ -33,16 +34,22 @@ public:
     void ClickedPosition(const Cell& cell);
 
     bool CanOperate() const;
+    bool CanHandelClick() const;
 
 Q_SIGNALS:
     void SgnEndOperate();
     void SgnLocationOperateHero();
 
 private:
+    void OnHeroEndMoving(HCPathMover* by_mover);
+
+private:
     SceneManager* scene_mgr_;
 
     GUIlocationHero* ui_location_hero_;
     GUISkipRound* ui_skip_round_;
+
+    HCPathMover* hc_path_mover_;
 
     QPointer<Hero> operate_hero_;
     bool can_operate_;

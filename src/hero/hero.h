@@ -46,9 +46,9 @@ public:
     void SetBattle(SceneManager* mgr);
 
     // 设置位置
-    void MoveToCell(const Cell& new_cell);
     void SetCell(const Cell& new_cell);
     Cell GetCell() const;
+    void SetPos(const QPointF& pos);
     // 跑进度条
     void ActionTimeAdvance();
     double GetActionProgess();
@@ -65,6 +65,8 @@ public:
     Cell GetTargetCell() const;
 
     QString BasePropertiesStr() const;
+
+    SceneManager* GetSceneManager() const;
 
 private:
     void InitialState();

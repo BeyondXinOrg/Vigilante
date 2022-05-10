@@ -56,6 +56,7 @@ void HeroSprite::SetFixedFrame(const QPixmap& pix)
 // 播放动画
 void HeroSprite::PlayAnimation(const QString& name)
 {
+    cur_animation_ = name;
     animation_timer_->disconnect();
 
     animation_pixs_ = animation_[name];
@@ -63,6 +64,11 @@ void HeroSprite::PlayAnimation(const QString& name)
     connect(animation_timer_, &QTimer::timeout, this, &HeroSprite::NextFrame);
     animation_cur_frame_ = 0;
     animation_timer_->start(SecondsToMs(1.0 / animation_fps_));
+}
+
+QString HeroSprite::CurAnimation() const
+{
+    return cur_animation_;
 }
 
 // 临时打印属性

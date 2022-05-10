@@ -19,6 +19,8 @@ public:
     void AddAnimation(const QString& name, const QList<QPixmap>& pixs);
     void PlayAnimation(const QString& name);
 
+    QString CurAnimation() const;
+
 protected:
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
@@ -39,6 +41,7 @@ private:
     QTimer* animation_timer_;
     int animation_fps_;
     int animation_cur_frame_;
+    QString cur_animation_;
 };
 
 #endif // HEROSPRITE_H

@@ -31,16 +31,6 @@ void Hero::SetBattle(SceneManager* mgr)
     SetCell(cell_);
 }
 
-// 移动到位置
-void Hero::MoveToCell(const Cell& new_cell)
-{
-    cell_ = new_cell;
-    if (scene_mgr_ && sprite_ != nullptr) {
-        sprite_->SetSpritePos(scene_mgr_->GetPathGrid()->CellToPoint(cell_));
-        scene_mgr_->UpdataPathMap();
-    }
-}
-
 void Hero::SetHeroSprite(HeroSprite* sprite)
 {
     //    if (map_) { // 如果实体已在地图中
@@ -70,6 +60,14 @@ void Hero::SetCell(const Cell& new_cell)
 Cell Hero::GetCell() const
 {
     return cell_;
+}
+
+// 播放动画用
+void Hero::SetPos(const QPointF& pos)
+{
+    if (scene_mgr_ && sprite_ != nullptr) {
+        sprite_->SetSpritePos(pos);
+    }
 }
 
 // 跑进度条
@@ -145,6 +143,11 @@ QString Hero::BasePropertiesStr() const
     str += QString(u8"血量:%1  ").arg(hero_state_.blood);
     str += QString(u8"进度条:%1  ").arg(hero_state_.action_progress);
     return str;
+}
+
+SceneManager* Hero::GetSceneManager() const
+{
+    return scene_mgr_;
 }
 
 void Hero::InitialState()

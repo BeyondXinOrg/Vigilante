@@ -99,9 +99,14 @@ void Warfare::OnChangeRoundHero(Hero* hero)
 // 场景点击
 void Warfare::OnSceneClick()
 {
+    if (!operate_mgr_->CanHandelClick()) {
+        return;
+    }
+
     auto click_cell = scene_mgr_->GetCurMouseCell();
     operate_mgr_->ClickedPosition(click_cell);
-    if (operate_mgr_->CanOperate()) {
+    if (operate_mgr_->CanOperate()
+        && operate_mgr_->CanHandelClick()) {
         heropanel_mgr_->ChangeShowHero(round_mgr_->GetRoundHero());
     } else {
         heropanel_mgr_->ChangeShowHero(click_cell);
