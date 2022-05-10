@@ -4,7 +4,6 @@
 #include <QHash>
 
 // 目前只有两个阵营，非友即敌。后续拓展
-
 enum class Relationship
 {
     kREL_Friend,

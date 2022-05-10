@@ -38,6 +38,8 @@ private:
 
     QBrush brush_move_range_;
     QVector<QRect> move_range_rects_;
+    QBrush brush_attack_range_;
+    QVector<QRect> attack_range_rects_;
     QBrush brush_select_;
     QRect select_rect_;
 

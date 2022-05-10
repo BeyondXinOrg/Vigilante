@@ -15,7 +15,10 @@ LayoutColourfulCell::LayoutColourfulCell(QGraphicsItem* parent)
     brush_move_range_.setColor(QColor(80, 105, 210, 80));
     brush_move_range_.setStyle(Qt::SolidPattern);
 
-    brush_select_.setColor(QColor(80, 105, 210, 110));
+    brush_attack_range_.setColor(QColor(255, 105, 110, 80));
+    brush_attack_range_.setStyle(Qt::SolidPattern);
+
+    brush_select_.setColor(QColor(80, 105, 210, 200));
     brush_select_.setStyle(Qt::SolidPattern);
 
     show_move_track_ = false;
@@ -44,6 +47,7 @@ void LayoutColourfulCell::SetSelectHero(Hero* hero)
 
     // 清空之前可移动范围
     move_range_rects_.clear();
+    attack_range_rects_.clear();
 
     // 获取当前英雄
     if (!hero) { // 无场景
@@ -57,6 +61,14 @@ void LayoutColourfulCell::SetSelectHero(Hero* hero)
         move_range_rects_
           << QRect(var.x * cell_size, var.y * cell_size,
                    cell_size, cell_size);
+    }
+
+    auto attack_range_cells = hero->GetAttackRange();
+    foreach (auto var, attack_range_cells) {
+        QRect rect(var.x * cell_size, var.y * cell_size, cell_size, cell_size);
+        if (!move_range_rects_.contains(rect)) {
+            attack_range_rects_ << rect;
+        }
     }
 
     Cell cell = hero->GetCell();
@@ -77,6 +89,7 @@ void LayoutColourfulCell::SetSelectCell(const Cell& cell)
     const int cell_size = scene_mgr_->GetPathGrid()->CellSize();
     select_rect_ = QRect(cell.x * cell_size, cell.y * cell_size, cell_size, cell_size);
     move_range_rects_.clear();
+    attack_range_rects_.clear();
 
     UpdataTerrainBg(); // 更新背景图片
 }
@@ -104,6 +117,7 @@ void LayoutColourfulCell::HideMovingTrack()
 void LayoutColourfulCell::ClearSelect()
 {
     move_range_rects_.clear();
+    attack_range_rects_.clear();
     select_rect_ = QRect();
     UpdataTerrainBg();
 }
@@ -134,6 +148,11 @@ void LayoutColourfulCell::UpdataTerrainBg()
     painter.setPen(QPen(brush_select_.color().toRgb(), 4));
     painter.setBrush(brush_select_);
     painter.drawRect(select_rect_);
+
+    // 可攻击范围
+    painter.setPen(QPen(brush_attack_range_.color().toRgb(), 4));
+    painter.setBrush(brush_attack_range_);
+    painter.drawRects(attack_range_rects_);
 
     // 可移动范围
     painter.setPen(QPen(brush_move_range_.color().toRgb(), 4));

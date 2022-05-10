@@ -59,6 +59,7 @@ public:
 
     // 获取当前可移动范围
     QList<Cell> GetMovingRange() const;
+    QList<Cell> GetAttackRange() const;
     QList<Cell> GetMovingTrack(const Cell& new_cell) const;
     bool CanMoveToCell(Cell cell) const;
     void SetTargetCell(Cell cell);

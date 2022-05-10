@@ -106,6 +106,23 @@ QList<Cell> Hero::GetMovingRange() const
     return path_map->CanReachPath(GetCell(), base_properties_.action_force);
 }
 
+QList<Cell> Hero::GetAttackRange() const
+{
+    auto path_map = scene_mgr_->GetPathMap();
+    auto moving_range = path_map->CanReachPath(GetCell(), base_properties_.action_force);
+    moving_range << GetCell();
+    QSet<Cell> attack_range;
+    foreach (auto cell, moving_range) {
+        attack_range << cell + Cell(0, 1);
+        attack_range << cell + Cell(0, -1);
+        attack_range << cell + Cell(1, 0);
+        attack_range << cell + Cell(-1, 0);
+    }
+    attack_range.remove(GetCell());
+
+    return QList<Cell>(attack_range.begin(), attack_range.end());
+}
+
 QList<Cell> Hero::GetMovingTrack(const Cell& new_cell) const
 {
     auto path_map = scene_mgr_->GetPathMap();
