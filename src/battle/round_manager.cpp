@@ -39,7 +39,7 @@ void RoundManager::EndRound()
     if (round_hero_) {
         round_hero_->ActionTimeReset();
     }
-    timer_speed_->start(20);
+    timer_speed_->start(15);
 }
 
 void RoundManager::OnTimerAdvance()

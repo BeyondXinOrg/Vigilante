@@ -2,13 +2,13 @@
 
 #include "scene/scene_manager.h"
 
+#include "battle/hero_panel_manager.h"
+#include "battle/operate_manager.h"
+#include "battle/round_manager.h"
 #include "diplomacy_manager.h"
 #include "hero/hero.h"
 #include "hero/hero_sheet.h"
 #include "hero/hero_sprite.h"
-#include "warfare/hero_panel_manager.h"
-#include "warfare/operate_manager.h"
-#include "warfare/round_manager.h"
 
 #include <QApplication>
 #include <QThread>
@@ -44,7 +44,7 @@ Hero* CreateHero(int x, int y, QString png)
     return hero;
 }
 
-Warfare::Warfare()
+Battle::Battle()
 {
     cell_grid_ = new CellGrid(22, 15);
     scene_mgr_ = new SceneManager(cell_grid_, 128);
@@ -74,30 +74,30 @@ Warfare::Warfare()
     }
 }
 
-void Warfare::BeginWar()
+void Battle::BeginWar()
 {
     scene_mgr_->Launch();
     round_mgr_->EndRound();
 }
 
-void Warfare::InitConnect()
+void Battle::InitConnect()
 {
-    connect(scene_mgr_, &SceneManager::SgnMouseRelease, this, &Warfare::OnSceneClick);
+    connect(scene_mgr_, &SceneManager::SgnMouseRelease, this, &Battle::OnSceneClick);
 
-    connect(round_mgr_, &RoundManager::SgnRoundHeroChange, this, &Warfare::OnChangeRoundHero);
-    connect(operate_mgr_, &OperateManager::SgnLocationOperateHero, this, &Warfare::OnLoactionRoundHero);
-    connect(operate_mgr_, &OperateManager::SgnEndOperate, this, &Warfare::OnEndOperate);
+    connect(round_mgr_, &RoundManager::SgnRoundHeroChange, this, &Battle::OnChangeRoundHero);
+    connect(operate_mgr_, &OperateManager::SgnLocationOperateHero, this, &Battle::OnLoactionRoundHero);
+    connect(operate_mgr_, &OperateManager::SgnEndOperate, this, &Battle::OnEndOperate);
 }
 
 // 回合英雄改变
-void Warfare::OnChangeRoundHero(Hero* hero)
+void Battle::OnChangeRoundHero(Hero* hero)
 {
     operate_mgr_->SetOperateHero(hero);
     heropanel_mgr_->ChangeShowHero(hero);
 }
 
 // 场景点击
-void Warfare::OnSceneClick()
+void Battle::OnSceneClick()
 {
     if (!operate_mgr_->CanHandelClick()) {
         return;
@@ -114,14 +114,14 @@ void Warfare::OnSceneClick()
 }
 
 // 定位当前回合英雄
-void Warfare::OnLoactionRoundHero()
+void Battle::OnLoactionRoundHero()
 {
     operate_mgr_->SetOperateHero(round_mgr_->GetRoundHero());
     heropanel_mgr_->ChangeShowHero(round_mgr_->GetRoundHero());
 }
 
 // 回合英雄操作结束
-void Warfare::OnEndOperate()
+void Battle::OnEndOperate()
 {
     heropanel_mgr_->ClearHero();
     round_mgr_->EndRound();

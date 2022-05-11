@@ -10,20 +10,16 @@ class SceneManager;
 
 struct HeroProperties
 {
-    short action_force { 0 }; // 行动力
-    short agile { 0 }; // 敏捷
-    short speed { 0 }; // 速度
+    double xing_dong_li { 0 }; // 行动力
+    double xu_li_speed { 0 }; // 蓄力速度
 
-    short physical_attack { 0 }; // 物理攻击
-    short physical_defense { 0 }; // 物理防御
-
-    short max_blood { 0 }; // 最大血量
+    double max_xue_liang { 0 }; // 最大血量
 };
 
 struct HeroState // 英雄状态
 {
-    short blood { 0 }; // 血量
-    double xu_li_progress { 0 };
+    double xue_liang { 0 }; // 血量
+    double xu_li { 0 }; // 蓄力值
 };
 
 enum BattleState // 战斗状态
@@ -49,10 +45,12 @@ public:
     void SetCell(const Cell& new_cell);
     Cell GetCell() const;
     void SetPos(const QPointF& pos);
+
     // 跑进度条
     void ActionTimeAdvance();
     double GetActionProgess();
     void ActionTimeReset();
+
     // 战斗状态
     void SetBattleState(const BattleState& state);
     BattleState GetBattleState() const;

@@ -184,12 +184,14 @@ void LayoutTerrain::GenerateRandomTerrain()
             i--;
             continue;
         }
+
         auto tree_type = random_forest_.GetForest();
         cells_type_[cell] = KTree_Cell;
+
         foreach (auto offset, random_forest_.GetForest()) {
             auto new_cell = cell + offset;
             if (grid->Contains(new_cell)) {
-                cells_type_[cell] = KTree_Cell;
+                cells_type_[new_cell] = KTree_Cell;
             }
         }
     }

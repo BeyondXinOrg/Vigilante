@@ -20,7 +20,7 @@ public:
 
     QString CurAnimation() const;
 
-    void UpdataXuLi(double xuli);
+    void UpdataState(double xuli, double xue_liang);
 
 protected:
     void paint(QPainter* painter,
@@ -37,6 +37,9 @@ private:
 
     QGraphicsPixmapItem* xu_li_item_;
     QPixmap xu_li_pix_;
+
+    QGraphicsPixmapItem* xue_liang_item_;
+    QPixmap xue_liang_pix_;
 
     QHash<QString, QList<QPixmap>> animation_; // 动画
     QList<QPixmap> animation_pixs_;

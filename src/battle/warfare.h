@@ -11,11 +11,11 @@ class OperateManager;
 class RoundManager;
 class Hero;
 
-class Warfare : public QObject
+class Battle : public QObject
 {
     Q_OBJECT
 public:
-    Warfare();
+    Battle();
     void BeginWar();
 
 private:

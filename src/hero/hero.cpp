@@ -72,18 +72,18 @@ void Hero::SetPos(const QPointF& pos)
 // 跑进度条
 void Hero::ActionTimeAdvance()
 {
-    hero_state_.xu_li_progress += 0.2 * base_properties_.agile;
+    hero_state_.xu_li += base_properties_.xu_li_speed;
     UpdataHeroSpriteState();
 }
 
 double Hero::GetActionProgess()
 {
-    return hero_state_.xu_li_progress;
+    return hero_state_.xu_li;
 }
 
 void Hero::ActionTimeReset()
 {
-    hero_state_.xu_li_progress = 0;
+    hero_state_.xu_li = 0;
     UpdataHeroSpriteState();
 }
 
@@ -102,13 +102,13 @@ BattleState Hero::GetBattleState() const
 QList<Cell> Hero::GetMovingRange() const
 {
     auto path_map = scene_mgr_->GetPathMap();
-    return path_map->CanReachPath(GetCell(), base_properties_.action_force);
+    return path_map->CanReachPath(GetCell(), base_properties_.xing_dong_li);
 }
 
 QList<Cell> Hero::GetAttackRange() const
 {
     auto path_map = scene_mgr_->GetPathMap();
-    auto moving_range = path_map->CanReachPath(GetCell(), base_properties_.action_force);
+    auto moving_range = path_map->CanReachPath(GetCell(), base_properties_.xing_dong_li);
     moving_range << GetCell();
     QSet<Cell> attack_range;
     foreach (auto cell, moving_range) {
@@ -126,7 +126,7 @@ QList<Cell> Hero::GetMovingTrack(const Cell& new_cell) const
 {
     auto path_map = scene_mgr_->GetPathMap();
     auto cells = path_map->MovingPath(
-      GetCell(), base_properties_.action_force, new_cell);
+      GetCell(), base_properties_.xing_dong_li, new_cell);
 
     return cells;
 }
@@ -134,7 +134,7 @@ QList<Cell> Hero::GetMovingTrack(const Cell& new_cell) const
 bool Hero::CanMoveToCell(Cell cell) const
 {
     auto path_map = scene_mgr_->GetPathMap();
-    auto cells = path_map->CanReachPath(GetCell(), base_properties_.action_force);
+    auto cells = path_map->CanReachPath(GetCell(), base_properties_.xing_dong_li);
     return cells.contains(cell);
 }
 
@@ -152,12 +152,9 @@ QString Hero::BasePropertiesStr() const
 {
     QString str;
 
-    str += QString(u8"攻击:%1      ").arg(base_properties_.physical_attack);
-    str += QString(u8"防御:%1  \n").arg(base_properties_.physical_defense);
-    str += QString(u8"敏捷:%1      ").arg(base_properties_.agile);
-    str += QString(u8"行动力:%1  \n").arg(base_properties_.action_force);
-    str += QString(u8"血量:%1  ").arg(hero_state_.blood);
-    str += QString(u8"进度条:%1  ").arg(hero_state_.xu_li_progress);
+    str += QString(u8"行动力:%1  \n").arg(base_properties_.xing_dong_li);
+    str += QString(u8"血量:%1  ").arg(hero_state_.xue_liang);
+    str += QString(u8"进度条:%1  ").arg(hero_state_.xu_li);
     return str;
 }
 
@@ -169,25 +166,23 @@ SceneManager* Hero::GetSceneManager() const
 void Hero::InitialState()
 {
     // 人物基本属性
-    base_properties_.action_force = 3;
-    base_properties_.agile = 4;
-    base_properties_.physical_attack = 50;
-    base_properties_.physical_defense = 3;
-    base_properties_.max_blood = 100;
-    base_properties_.agile += QRandomGenerator::global()->bounded(10);
+    base_properties_.xing_dong_li = 3.0;
+    base_properties_.max_xue_liang = 100.0;
+    base_properties_.xu_li_speed = 1.0;
 
     // 人物状态
-    hero_state_.blood = base_properties_.max_blood;
-    hero_state_.xu_li_progress = 0;
+    hero_state_.xue_liang = base_properties_.max_xue_liang;
+    hero_state_.xu_li = 0;
 
     // 人物战斗状态
     battle_state_ = KEnergy_Storage;
 
-    //    UpdataHeroSpriteState();
+    base_properties_.xu_li_speed += QRandomGenerator::global()->bounded(1.5);
 }
 
 // 更新英雄精灵状态
 void Hero::UpdataHeroSpriteState()
 {
-    sprite_->UpdataXuLi(hero_state_.xu_li_progress);
+    sprite_->UpdataState(hero_state_.xu_li / 100.0,
+                         hero_state_.xue_liang / base_properties_.max_xue_liang);
 }

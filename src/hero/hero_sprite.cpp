@@ -24,7 +24,13 @@ HeroSprite::HeroSprite(QGraphicsItem* parent)
     xu_li_pix_ = QPixmap("./xu_li.png").scaled(128, 10);
     xu_li_item_->setPos(0, 10);
     xu_li_item_->setZValue(1);
-    UpdataXuLi(0);
+
+    xue_liang_item_ = new QGraphicsPixmapItem(this);
+    xue_liang_pix_ = QPixmap("./xue_cao.png").scaled(128, 10);
+    xue_liang_item_->setPos(0, -3);
+    xue_liang_item_->setZValue(1);
+
+    UpdataState(0, 1);
 
     Initialize();
 }
@@ -72,10 +78,13 @@ QString HeroSprite::CurAnimation() const
     return cur_animation_;
 }
 
-void HeroSprite::UpdataXuLi(double xuli)
+void HeroSprite::UpdataState(double xuli, double xue_liang)
 {
     xu_li_item_->setPixmap(
-      xu_li_pix_.scaled(xuli * xu_li_pix_.width() / 100.0, xu_li_pix_.height()));
+      xu_li_pix_.scaled(xuli * 128, 10));
+
+    xue_liang_item_->setPixmap(
+      xue_liang_pix_.scaled(xue_liang * 128, 10));
 }
 
 void HeroSprite::paint(
