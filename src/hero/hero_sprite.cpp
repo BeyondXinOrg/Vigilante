@@ -18,13 +18,14 @@ HeroSprite::HeroSprite(QGraphicsItem* parent)
 {
     pixmap_item_ = new QGraphicsPixmapItem(this);
     pixmap_item_->setPos(0, 0);
-    text_item_ = new QGraphicsTextItem(this);
-    text_item_->setPos(10, 5);
-    QFont font;
-    font.setPointSize(18);
-    font.setBold(true);
-    text_item_->setFont(font);
-    text_item_->setDefaultTextColor(Qt::black);
+    pixmap_item_->setZValue(0);
+
+    xu_li_item_ = new QGraphicsPixmapItem(this);
+    xu_li_pix_ = QPixmap("./xu_li.png").scaled(128, 10);
+    xu_li_item_->setPos(0, 10);
+    xu_li_item_->setZValue(1);
+    UpdataXuLi(0);
+
     Initialize();
 }
 
@@ -71,11 +72,10 @@ QString HeroSprite::CurAnimation() const
     return cur_animation_;
 }
 
-// 临时打印属性
-void HeroSprite::SetTempPreview(short blood, double progress)
+void HeroSprite::UpdataXuLi(double xuli)
 {
-    //    text_item_->setPlainText(
-    //      QString("a:%1\n\nb:%2").arg(blood).arg(progress));
+    xu_li_item_->setPixmap(
+      xu_li_pix_.scaled(xuli * xu_li_pix_.width() / 100.0, xu_li_pix_.height()));
 }
 
 void HeroSprite::paint(
@@ -89,7 +89,6 @@ void HeroSprite::paint(
 void HeroSprite::Initialize()
 {
     animation_timer_ = new QTimer(this);
-
     animation_fps_ = 8;
     animation_cur_frame_ = 0;
 }

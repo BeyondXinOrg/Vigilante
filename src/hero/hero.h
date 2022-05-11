@@ -23,7 +23,7 @@ struct HeroProperties
 struct HeroState // 英雄状态
 {
     short blood { 0 }; // 血量
-    double action_progress { 0 };
+    double xu_li_progress { 0 };
 };
 
 enum BattleState // 战斗状态
@@ -71,7 +71,8 @@ public:
 
 private:
     void InitialState();
-    void TmpUpState();
+
+    void UpdataHeroSpriteState();
 
 private:
     Cell cell_, target_cell_;

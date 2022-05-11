@@ -42,7 +42,6 @@ void Hero::SetHeroSprite(HeroSprite* sprite)
     // 设置内部精灵\指向新精灵的指针
     sprite_ = sprite;
     sprite_->setParent(this);
-    TmpUpState();
 }
 
 // 设置位置
@@ -73,19 +72,19 @@ void Hero::SetPos(const QPointF& pos)
 // 跑进度条
 void Hero::ActionTimeAdvance()
 {
-    hero_state_.action_progress += 0.2 * base_properties_.agile;
-    TmpUpState();
+    hero_state_.xu_li_progress += 0.2 * base_properties_.agile;
+    UpdataHeroSpriteState();
 }
 
 double Hero::GetActionProgess()
 {
-    return hero_state_.action_progress;
+    return hero_state_.xu_li_progress;
 }
 
 void Hero::ActionTimeReset()
 {
-    hero_state_.action_progress = 0;
-    TmpUpState();
+    hero_state_.xu_li_progress = 0;
+    UpdataHeroSpriteState();
 }
 
 // 战斗状态
@@ -158,7 +157,7 @@ QString Hero::BasePropertiesStr() const
     str += QString(u8"敏捷:%1      ").arg(base_properties_.agile);
     str += QString(u8"行动力:%1  \n").arg(base_properties_.action_force);
     str += QString(u8"血量:%1  ").arg(hero_state_.blood);
-    str += QString(u8"进度条:%1  ").arg(hero_state_.action_progress);
+    str += QString(u8"进度条:%1  ").arg(hero_state_.xu_li_progress);
     return str;
 }
 
@@ -179,14 +178,16 @@ void Hero::InitialState()
 
     // 人物状态
     hero_state_.blood = base_properties_.max_blood;
-    hero_state_.action_progress = 0;
+    hero_state_.xu_li_progress = 0;
 
     // 人物战斗状态
     battle_state_ = KEnergy_Storage;
+
+    //    UpdataHeroSpriteState();
 }
 
-// 临时更新状态
-void Hero::TmpUpState()
+// 更新英雄精灵状态
+void Hero::UpdataHeroSpriteState()
 {
-    sprite_->SetTempPreview(hero_state_.blood, hero_state_.action_progress);
+    sprite_->UpdataXuLi(hero_state_.xu_li_progress);
 }

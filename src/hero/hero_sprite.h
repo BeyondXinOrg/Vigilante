@@ -14,12 +14,13 @@ public:
     void SetFixedFrame(const QPixmap& pix);
 
     void SetSpritePos(QPointF pos_by_scene);
-    void SetTempPreview(short blood, double progress);
 
     void AddAnimation(const QString& name, const QList<QPixmap>& pixs);
     void PlayAnimation(const QString& name);
 
     QString CurAnimation() const;
+
+    void UpdataXuLi(double xuli);
 
 protected:
     void paint(QPainter* painter,
@@ -33,7 +34,9 @@ private:
 
 private:
     QGraphicsPixmapItem* pixmap_item_;
-    QGraphicsTextItem* text_item_;
+
+    QGraphicsPixmapItem* xu_li_item_;
+    QPixmap xu_li_pix_;
 
     QHash<QString, QList<QPixmap>> animation_; // 动画
     QList<QPixmap> animation_pixs_;
