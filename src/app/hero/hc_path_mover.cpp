@@ -23,6 +23,10 @@ void HCPathMover::MoveHero(const QList<Cell>& paths)
         return;
     }
 
+    if (!hero_controlled_->ConsumeXingDongLi(paths.size() - 1)) {
+        return;
+    }
+
     auto scene_mgr = hero_controlled_->GetSceneManager();
     auto path_grid = scene_mgr->GetPathGrid();
 

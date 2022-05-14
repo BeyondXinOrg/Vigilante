@@ -5,6 +5,8 @@
 #include <QRectF>
 #include <QTimer>
 
+const static int cao_width = 112;
+
 /// 将秒转换为毫秒。
 double SecondsToMs(double seconds)
 {
@@ -18,16 +20,22 @@ HeroSprite::HeroSprite(QGraphicsItem* parent)
 {
     pixmap_item_ = new QGraphicsPixmapItem(this);
     pixmap_item_->setPos(0, 0);
-    pixmap_item_->setZValue(0);
+    pixmap_item_->setZValue(5);
 
     xu_li_item_ = new QGraphicsPixmapItem(this);
-    xu_li_pix_ = QPixmap("./xu_li.png").scaled(128, 10);
-    xu_li_item_->setPos(0, 10);
-    xu_li_item_->setZValue(1);
+    xu_li_pix_ = QPixmap("./xu_li.png").scaled(cao_width, 10);
+    xu_li_item_->setPos((128 - cao_width) / 2, 10);
+    xu_li_item_->setZValue(10);
 
     xue_liang_item_ = new QGraphicsPixmapItem(this);
-    xue_liang_pix_ = QPixmap("./xue_cao.png").scaled(128, 10);
-    xue_liang_item_->setPos(0, -3);
+    xue_liang_pix_ = QPixmap("./xue_cao.png").scaled(cao_width, 10);
+    xue_liang_item_->setPos((128 - cao_width) / 2, -3);
+    xue_liang_item_->setZValue(10);
+
+    operate_item_ = new QGraphicsPixmapItem(this);
+    operate_item_->setPixmap(QPixmap("./operate.png").scaled(100, 100));
+    operate_item_->setPos(14, 14);
+    operate_item_->setVisible(false);
     xue_liang_item_->setZValue(1);
 
     UpdataState(0, 1);
@@ -81,10 +89,15 @@ QString HeroSprite::CurAnimation() const
 void HeroSprite::UpdataState(double xuli, double xue_liang)
 {
     xu_li_item_->setPixmap(
-      xu_li_pix_.scaled(xuli * 128, 10));
+      xu_li_pix_.scaled(xuli * cao_width, 10));
 
     xue_liang_item_->setPixmap(
-      xue_liang_pix_.scaled(xue_liang * 128, 10));
+      xue_liang_pix_.scaled(xue_liang * cao_width, 10));
+}
+
+void HeroSprite::SetOperate(const bool& operate)
+{
+    operate_item_->setVisible(operate);
 }
 
 void HeroSprite::paint(

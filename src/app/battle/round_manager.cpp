@@ -38,6 +38,7 @@ void RoundManager::EndRound()
 {
     if (round_hero_) {
         round_hero_->ActionTimeReset();
+        round_hero_ = nullptr;
     }
     timer_speed_->start(15);
 }
@@ -46,7 +47,7 @@ void RoundManager::OnTimerAdvance()
 {
     // 检测英雄进度
     foreach (auto hero, heros_) {
-        int progress = hero->GetActionProgess();
+        double progress = hero->GetActionProgess();
         if (progress >= 100) {
             timer_speed_->stop();
             round_hero_ = hero;

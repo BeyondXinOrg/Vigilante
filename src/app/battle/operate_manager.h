@@ -36,6 +36,10 @@ public:
     bool CanOperate() const;
     bool CanHandelClick() const;
 
+    void ChangeShowHero(Hero* hero);
+    void ChangeShowHero(Cell click_cell);
+    void ClearHero();
+
 Q_SIGNALS:
     void SgnEndOperate();
     void SgnLocationOperateHero();
@@ -51,7 +55,7 @@ private:
 
     HCPathMover* hc_path_mover_;
 
-    QPointer<Hero> operate_hero_;
+    QPointer<Hero> cur_hero_;
     bool can_operate_;
     Cell target_cell_;
 

@@ -22,6 +22,8 @@ public:
 
     void UpdataState(double xuli, double xue_liang);
 
+    void SetOperate(const bool& operate);
+
 protected:
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
@@ -40,6 +42,8 @@ private:
 
     QGraphicsPixmapItem* xue_liang_item_;
     QPixmap xue_liang_pix_;
+
+    QGraphicsPixmapItem* operate_item_;
 
     QHash<QString, QList<QPixmap>> animation_; // 动画
     QList<QPixmap> animation_pixs_;

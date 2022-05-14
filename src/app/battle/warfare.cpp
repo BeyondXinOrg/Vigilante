@@ -46,7 +46,7 @@ Hero* CreateHero(int x, int y, QString png)
 
 Battle::Battle()
 {
-    cell_grid_ = new CellGrid(22, 15);
+    cell_grid_ = new CellGrid(18, 12);
     scene_mgr_ = new SceneManager(cell_grid_, 128);
 
     diplomacy_mgr_ = new DiplomacyManager();
@@ -93,7 +93,6 @@ void Battle::InitConnect()
 void Battle::OnChangeRoundHero(Hero* hero)
 {
     operate_mgr_->SetOperateHero(hero);
-    heropanel_mgr_->ChangeShowHero(hero);
 }
 
 // 场景点击
@@ -105,24 +104,16 @@ void Battle::OnSceneClick()
 
     auto click_cell = scene_mgr_->GetCurMouseCell();
     operate_mgr_->ClickedPosition(click_cell);
-    if (operate_mgr_->CanOperate()
-        && operate_mgr_->CanHandelClick()) {
-        heropanel_mgr_->ChangeShowHero(round_mgr_->GetRoundHero());
-    } else {
-        heropanel_mgr_->ChangeShowHero(click_cell);
-    }
 }
 
 // 定位当前回合英雄
 void Battle::OnLoactionRoundHero()
 {
     operate_mgr_->SetOperateHero(round_mgr_->GetRoundHero());
-    heropanel_mgr_->ChangeShowHero(round_mgr_->GetRoundHero());
 }
 
 // 回合英雄操作结束
 void Battle::OnEndOperate()
 {
-    heropanel_mgr_->ClearHero();
     round_mgr_->EndRound();
 }

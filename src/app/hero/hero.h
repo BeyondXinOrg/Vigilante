@@ -10,7 +10,8 @@ class SceneManager;
 
 struct HeroProperties
 {
-    double xing_dong_li { 0 }; // 行动力
+    int xing_dong_li { 0 }; // 行动力
+    int surplus_xing_dong_li { 0 }; // 行动力
     double xu_li_speed { 0 }; // 蓄力速度
 
     double max_xue_liang { 0 }; // 最大血量
@@ -20,14 +21,6 @@ struct HeroState // 英雄状态
 {
     double xue_liang { 0 }; // 血量
     double xu_li { 0 }; // 蓄力值
-};
-
-enum BattleState // 战斗状态
-{
-    KEnergy_Storage, // 蓄力（跑进度条）
-    KSelection_Destination, // 选择移动位置
-    KConfirm_Destination, // 确认移动位置
-    KSelection_Hero, // 选择对象(攻击、用药)
 };
 
 class Hero : public QObject
@@ -51,10 +44,6 @@ public:
     double GetActionProgess();
     void ActionTimeReset();
 
-    // 战斗状态
-    void SetBattleState(const BattleState& state);
-    BattleState GetBattleState() const;
-
     // 获取当前可移动范围
     QList<Cell> GetMovingRange() const;
     QList<Cell> GetAttackRange() const;
@@ -62,10 +51,13 @@ public:
     bool CanMoveToCell(Cell cell) const;
     void SetTargetCell(Cell cell);
     Cell GetTargetCell() const;
+    bool ConsumeXingDongLi(int data);
 
     QString BasePropertiesStr() const;
 
     SceneManager* GetSceneManager() const;
+
+    void SetOperate(const bool& operate);
 
 private:
     void InitialState();
@@ -78,7 +70,6 @@ private:
 
     HeroProperties base_properties_; // 基本属性
     HeroState hero_state_; //  英雄状态
-    BattleState battle_state_; // 战斗状态
 
     SceneManager* scene_mgr_;
 };

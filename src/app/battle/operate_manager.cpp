@@ -27,32 +27,33 @@ OperateManager::OperateManager(SceneManager* scene_mgr)
 
 void OperateManager::SetOperateHero(Hero* hero)
 {
-    operate_hero_ = hero;
+    cur_hero_ = hero;
+    cur_hero_->SetOperate(true);
     can_operate_ = true;
     state_ = kOPE_None;
-    ui_location_hero_->SetTargetHero(operate_hero_);
-    scene_mgr_->MoveCamCenterToHero(operate_hero_);
-
-    ui_skip_round_->SetVisable(!operate_hero_.isNull());
+    ui_location_hero_->SetTargetHero(cur_hero_);
+    scene_mgr_->MoveCamCenterToHero(cur_hero_);
+    ui_skip_round_->SetVisable(true);
+    ChangeShowHero(hero);
 }
 
 void OperateManager::ClickedPosition(const Cell& click_cell)
 {
 
-    if (!operate_hero_) {
+    if (!cur_hero_) {
         return;
     }
 
     auto click_hero = scene_mgr_->GetCurMouseHero(click_cell);
 
     if (!can_operate_) {
-        if (click_hero == operate_hero_) {
+        if (click_hero == cur_hero_) {
             can_operate_ = true;
         }
     } else {
         switch (state_) {
         case kOPE_None: {
-            if (operate_hero_->CanMoveToCell(click_cell)) { // 是否可以移动
+            if (cur_hero_->CanMoveToCell(click_cell)) { // 是否可以移动
                 target_cell_ = click_cell;
                 state_ = kREL_Select_Move;
             } else {
@@ -66,9 +67,11 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
             if (target_cell_ == click_cell) { // 确认移动
                 state_ = kOPE_Moving;
                 //                operate_hero_->MoveToCell(click_cell);
-            } else if (operate_hero_->CanMoveToCell(click_cell)) { // 是否可以移动
+            } else if (cur_hero_->CanMoveToCell(click_cell)) { // 是否可以移动
                 target_cell_ = click_cell;
                 state_ = kREL_Select_Move;
+            } else if (click_cell == cur_hero_->GetCell()) {
+                state_ = kOPE_None;
             } else {
                 can_operate_ = false;
                 state_ = kOPE_None;
@@ -84,16 +87,22 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
 
     if (state_ == kREL_Select_Move) {
         scene_mgr_->GetLayoutColourfulCell()->SetMovingTrack(
-          operate_hero_->GetMovingTrack(target_cell_));
+          cur_hero_->GetMovingTrack(target_cell_));
     } else {
         scene_mgr_->GetLayoutColourfulCell()->HideMovingTrack();
     }
 
     if (state_ == kOPE_Moving) {
+        ui_skip_round_->SetVisable(false);
         scene_mgr_->GetLayoutColourfulCell()->ClearSelect();
+        hc_path_mover_->SetHeroControlled(cur_hero_);
+        hc_path_mover_->MoveHero(cur_hero_->GetMovingTrack(target_cell_));
+    }
 
-        hc_path_mover_->SetHeroControlled(operate_hero_);
-        hc_path_mover_->MoveHero(operate_hero_->GetMovingTrack(target_cell_));
+    if (CanHandelClick() && can_operate_) {
+        ChangeShowHero(cur_hero_);
+    } else {
+        ChangeShowHero(click_cell);
     }
 }
 
@@ -110,11 +119,34 @@ bool OperateManager::CanHandelClick() const
     return true;
 }
 
+void OperateManager::ChangeShowHero(Hero* hero)
+{
+    scene_mgr_->GetLayoutColourfulCell()->SetSelectHero(cur_hero_);
+}
+
+void OperateManager::ChangeShowHero(Cell click_cell)
+{
+    auto click_hero = scene_mgr_->GetCurMouseHero(click_cell);
+    if (click_hero) {
+        scene_mgr_->GetLayoutColourfulCell()->SetSelectHero(click_hero);
+    } else {
+        scene_mgr_->GetLayoutColourfulCell()->SetSelectCell(click_cell);
+    }
+}
+
+void OperateManager::ClearHero()
+{
+    scene_mgr_->GetLayoutColourfulCell()->ClearSelect();
+}
+
 void OperateManager::OnHeroEndMoving(HCPathMover* by_mover)
 {
     if (by_mover == hc_path_mover_
         && state_ == kOPE_Moving) {
+        ui_skip_round_->SetVisable(true);
         state_ = kOPE_None;
-        emit SgnEndOperate();
+        ChangeShowHero(cur_hero_);
+        //        emit SgnEndOperate();
+        //        ClearHero();
     }
 }

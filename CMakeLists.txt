@@ -23,15 +23,15 @@ set(BUILD_SHARED_LIBS "" ON)
 set(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2 /DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "/MDd /Zi /Ob0 /Od /RTC1")
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network Concurrent Sql)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network Concurrent Xml)
 add_definitions(-DQT_MESSAGELOGCONTEXT)
 
 add_subdirectory(src)
 
-#add_custom_target(clean-all
-#   COMMAND ${CMAKE_BUILD_TOOL} clean
-#   COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
-#)
+add_custom_target(clean-all
+   COMMAND ${CMAKE_BUILD_TOOL} clean
+   COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
+)
 
 
 
