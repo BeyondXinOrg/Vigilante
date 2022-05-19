@@ -17,7 +17,7 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
-    void SetCenterWidget(QWidget* wid);
+    void AddCenterWidget(QWidget* wid);
 
 private:
     void PopulateMenuBar();

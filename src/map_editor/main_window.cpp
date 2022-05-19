@@ -29,9 +29,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::SetCenterWidget(QWidget* wid)
+void MainWindow::AddCenterWidget(QWidget* wid)
 {
-    ui->lay_view->addWidget(wid);
+    if (wid) {
+        ui->lay_view->addWidget(wid);
+    }
 }
 
 void MainWindow::PopulateMenuBar()

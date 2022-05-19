@@ -1,17 +1,20 @@
 ﻿#include "editor_view.h"
 
+#include "mediator.h"
+
 #include <QScrollBar>
 #include <QWheelEvent>
 
-EditorView::EditorView(QWidget* parent)
+EditorView::EditorView(Mediator* mediator, QWidget* parent)
   : QGraphicsView(parent)
   , current_scale_(1)
   , max_scale_(20000)
   , min_scale_(.01)
+  , mediator_(mediator)
 {
     // 禁用QGraphicsView的滚动条
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // 布局策略
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -73,17 +76,17 @@ void EditorView::UpdateSceneRect()
 
 void EditorView::mousePressEvent(QMouseEvent* event)
 {
-    Q_UNUSED(event)
+    mediator_->MousePress(event);
 }
 
 void EditorView::mouseMoveEvent(QMouseEvent* event)
 {
-    Q_UNUSED(event)
+    mediator_->MouseMove(event);
 }
 
 void EditorView::mouseReleaseEvent(QMouseEvent* event)
 {
-    Q_UNUSED(event)
+    mediator_->MouseRelease(event);
 }
 
 void EditorView::wheelEvent(QWheelEvent* event)

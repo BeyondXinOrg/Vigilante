@@ -3,12 +3,14 @@
 
 #include <QGraphicsView>
 
+class Mediator;
+
 class EditorView : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    explicit EditorView(QWidget* parent = nullptr);
+    explicit EditorView(Mediator* mediator, QWidget* parent = nullptr);
     ~EditorView() override;
 
     void ScaleScene(const double& new_scale);
@@ -32,6 +34,8 @@ protected:
 
 private:
     double current_scale_, max_scale_, min_scale_;
+
+    Mediator* mediator_;
 };
 
 #endif // EDITORVIEW_H
