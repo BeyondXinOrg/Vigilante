@@ -81,15 +81,15 @@ void HCPathMover::OnMoveStep()
         hero_controlled_->SetCell(target_cell_);
         StopMoveHero();
         QString name = "stand_" + orientation_list_.last();
-        hero_controlled_->GetSprite()->PlayAnimation(name);
+        hero_controlled_->Sprite()->PlayAnimation(name);
         emit SgnSuccesfullyMoved(this);
         return;
     }
 
     QString name = "move_" + orientation_list_.at(target_point_index_ / step_size_);
-    auto cur_animation = hero_controlled_->GetSprite()->CurAnimation();
+    auto cur_animation = hero_controlled_->Sprite()->CurAnimation();
     if (name != cur_animation) {
-        hero_controlled_->GetSprite()->PlayAnimation(name);
+        hero_controlled_->Sprite()->PlayAnimation(name);
     }
 
     hero_controlled_->SetPos(path_pos_.at(target_point_index_));

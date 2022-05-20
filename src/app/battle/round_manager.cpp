@@ -1,6 +1,9 @@
-﻿#include "round_manager.h"
+﻿#pragma execution_character_set("utf-8")
+
+#include "round_manager.h"
 
 #include "hero/hero.h"
+#include "hero/hero_state.h"
 
 #include <QTimer>
 
@@ -37,7 +40,7 @@ Hero* RoundManager::GetRoundHero()
 void RoundManager::EndRound()
 {
     if (round_hero_) {
-        round_hero_->ActionTimeReset();
+        round_hero_->State()->EndRound();
         round_hero_ = nullptr;
     }
     timer_speed_->start(15);
@@ -47,7 +50,7 @@ void RoundManager::OnTimerAdvance()
 {
     // 检测英雄进度
     foreach (auto hero, heros_) {
-        double progress = hero->GetActionProgess();
+        double progress = hero->State()->battle_state_.value("蓄力值");
         if (progress >= 100) {
             timer_speed_->stop();
             round_hero_ = hero;
@@ -63,6 +66,6 @@ void RoundManager::OnTimerAdvance()
 
     // 英雄行动进度推进
     foreach (auto hero, heros_) {
-        hero->ActionTimeAdvance();
+        hero->State()->PrepareAction();
     }
 }

@@ -5,6 +5,9 @@
 #include <QObject>
 
 class Battle;
+class HeroSprite;
+class Hero;
+class HeroState;
 namespace QXlsx {
 class Document;
 }
@@ -20,6 +23,10 @@ public:
 private:
     QVariant LoadConfigCell(int col, int row);
     void LoadConfigResources();
+
+    Hero* CreateHero(QString key);
+    HeroSprite* CreateHeroSprite(QString png);
+    HeroState* CreateHeroState(QString key);
 
 private:
     QHash<QString, QString> resources_;

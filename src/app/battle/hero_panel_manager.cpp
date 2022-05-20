@@ -18,8 +18,6 @@ void HeroPanelManager::ChangeShowHero(Cell click_cell)
 {
     auto click_hero = scene_mgr_->GetCurMouseHero(click_cell);
 
-    //    auto click_terrain = scene_mgr_->GetTerrainType(click_cell);
-
     if (click_hero) {
         cur_hero_ = click_hero;
         scene_mgr_->GetLayoutColourfulCell()->SetSelectHero(click_hero);

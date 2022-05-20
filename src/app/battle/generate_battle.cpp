@@ -7,10 +7,12 @@
 #include "battle/operate_manager.h"
 #include "battle/round_manager.h"
 #include "battle/warfare.h"
+#include "data/cell.h"
 #include "diplomacy_manager.h"
 #include "hero/hero.h"
 #include "hero/hero_sheet.h"
 #include "hero/hero_sprite.h"
+#include "hero/hero_state.h"
 #include "scene/scene_manager.h"
 
 #include "QXlsx/header/xlsxcellrange.h"
@@ -23,8 +25,6 @@
 #include <QApplication>
 #include <QThread>
 #include <QTimer>
-
-Hero* CreateHero(int x, int y, QString png);
 
 GenerateBattle::GenerateBattle(const QString& config_name)
 {
@@ -39,8 +39,7 @@ Battle* GenerateBattle::GetBattle(const QString& battle_name)
     Battle* warfare = new Battle();
 
     // 解析战斗
-    QString battle_map_key;
-    QStringList armys;
+    QString battle_map_key, heros_str;
     xlsx_r_->selectSheet("战斗");
     auto xlsx_r_ange = xlsx_r_->dimension();
     int battle_row = -1;
@@ -57,8 +56,7 @@ Battle* GenerateBattle::GetBattle(const QString& battle_name)
         return nullptr;
     }
     battle_map_key = LoadConfigCell(battle_row, 2).toString();
-    armys << LoadConfigCell(battle_row, 3).toString();
-    armys << LoadConfigCell(battle_row, 4).toString();
+    heros_str = LoadConfigCell(battle_row, 3).toString();
 
     // 解析战斗场景
     xlsx_r_->selectSheet("战斗地图");
@@ -93,23 +91,20 @@ Battle* GenerateBattle::GetBattle(const QString& battle_name)
     warfare->GenerateScene(xblocks, yblocks, resources_.value(background));
 
     // 地图增加人物
-    QList<Hero*> heros;
-    Hero* hero;
-    hero = CreateHero(0, 0, u8"./sheet_舞女.png");
-    heros << hero;
-    hero = CreateHero(0, 1, u8"./sheet_弓骑兵.png");
-    heros << hero;
-    hero = CreateHero(9, 9, u8"./sheet_关羽骑马.png");
-    heros << hero;
-    hero = CreateHero(9, 8, u8"./sheet_张飞骑马.png");
-    heros << hero;
+    auto heros_str_list = heros_str.split(";");
+    foreach (auto hero_str, heros_str_list) {
+        auto hero_str_list = hero_str.split(",");
 
-    foreach (auto var, heros) {
-        if (warfare->scene_mgr_->AddHero(var)) {
-            warfare->round_mgr_->AddHero(var);
+        QString hero_key = hero_str_list.at(1);
+        Hero* hero = CreateHero(hero_key);
+
+        Cell pos(hero_str_list.at(2).toInt(), hero_str_list.at(3).toInt());
+        hero->SetCell(pos);
+
+        if (warfare->scene_mgr_->AddHero(hero)) {
+            warfare->round_mgr_->AddHero(hero);
         };
     }
-
     return warfare;
 }
 
@@ -143,9 +138,38 @@ void GenerateBattle::LoadConfigResources()
     }
 }
 
-Hero* CreateHero(int x, int y, QString png)
+Hero* GenerateBattle::CreateHero(QString key)
 {
     Hero* hero = new Hero();
+
+    xlsx_r_->selectSheet("人物");
+    auto xlsx_r_ange = xlsx_r_->dimension();
+    int row = -1;
+    for (int i = 1; i <= xlsx_r_ange.rowCount(); ++i) {
+        QXlsx::Cell* key_cell = xlsx_r_->cellAt(i, 1);
+        if (key_cell != nullptr && key_cell->readValue().toString() == key) {
+            row = i;
+            break;
+        } else {
+            continue;
+        }
+    }
+
+    if (row <= 0) {
+        return nullptr;
+    }
+
+    QString animation_png = LoadConfigCell(row, 3).toString();
+    QString state_key = LoadConfigCell(row, 6).toString();
+
+    hero->SetHeroState(CreateHeroState(state_key));
+    hero->SetHeroSprite(CreateHeroSprite(resources_.value(animation_png)));
+
+    return hero;
+}
+
+HeroSprite* GenerateBattle::CreateHeroSprite(QString png)
+{
     HeroSheet* hero_sheet = new HeroSheet(png, 16, 3, 64, 64);
     HeroSprite* hero_sprite = new HeroSprite();
 
@@ -166,9 +190,36 @@ Hero* CreateHero(int x, int y, QString png)
     hero_sprite->AddAnimation("stand_left", hero_sheet->TileAt(Cell(4, 2), Cell(5, 2)));
     hero_sprite->AddAnimation("stand_right", hero_sheet->TileAt(Cell(8, 2), Cell(9, 2)));
 
-    hero->SetHeroSprite(hero_sprite);
     hero_sprite->PlayAnimation("stand_down");
+    return hero_sprite;
+}
 
-    hero->SetCell(Cell(x, y));
-    return hero;
+HeroState* GenerateBattle::CreateHeroState(QString key)
+{
+    QHash<QString, double> data;
+
+    xlsx_r_->selectSheet("能力属性");
+    auto xlsx_r_ange = xlsx_r_->dimension();
+    int row = -1;
+    for (int i = 1; i <= xlsx_r_ange.rowCount(); ++i) {
+        QXlsx::Cell* key_cell = xlsx_r_->cellAt(i, 1);
+        if (key_cell != nullptr && key_cell->readValue().toString() == key) {
+            row = i;
+            break;
+        } else {
+            continue;
+        }
+    }
+
+    if (row <= 0) {
+        return nullptr;
+    }
+
+    for (int i = 1; i <= xlsx_r_ange.columnCount(); ++i) {
+        data[LoadConfigCell(1, i).toString()] = LoadConfigCell(row, i).toDouble();
+    }
+
+    HeroState* state = new HeroState();
+    state->InitState(data);
+    return state;
 }

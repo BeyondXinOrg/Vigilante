@@ -7,21 +7,7 @@
 
 class HeroSprite;
 class SceneManager;
-
-struct HeroProperties
-{
-    int xing_dong_li { 0 }; // 行动力
-    int surplus_xing_dong_li { 0 }; // 行动力
-    double xu_li_speed { 0 }; // 蓄力速度
-
-    double max_xue_liang { 0 }; // 最大血量
-};
-
-struct HeroState // 英雄状态
-{
-    double xue_liang { 0 }; // 血量
-    double xu_li { 0 }; // 蓄力值
-};
+class HeroState;
 
 class Hero : public QObject
 {
@@ -30,19 +16,17 @@ public:
     // 初始化
     Hero();
     ~Hero();
-    void SetHeroSprite(HeroSprite* sprite);
-    HeroSprite* GetSprite() const;
+
     void SetBattle(SceneManager* mgr);
+    void SetHeroSprite(HeroSprite* sprite);
+    void SetHeroState(HeroState* state);
+    HeroSprite* Sprite() const;
+    HeroState* State() const;
 
     // 设置位置
     void SetCell(const Cell& new_cell);
     Cell GetCell() const;
     void SetPos(const QPointF& pos);
-
-    // 跑进度条
-    void ActionTimeAdvance();
-    double GetActionProgess();
-    void ActionTimeReset();
 
     // 获取当前可移动范围
     QList<Cell> GetMovingRange() const;
@@ -59,19 +43,20 @@ public:
 
     void SetOperate(const bool& operate);
 
-private:
-    void InitialState();
+    void SetAbilityState(const QString& data);
 
+private:
     void UpdataHeroSpriteState();
 
 private:
-    Cell cell_, target_cell_;
-    HeroSprite* sprite_;
-
-    HeroProperties base_properties_; // 基本属性
-    HeroState hero_state_; //  英雄状态
-
     SceneManager* scene_mgr_;
+    HeroSprite* sprite_;
+    HeroState* state_;
+
+    Cell cell_, target_cell_;
+
+    QHash<QString, QVariant> ability_state_; // 能力属性
+    QHash<QString, QVariant> battle_state_; // 战斗属性
 };
 
 inline uint qHash(const QPointer<Hero>& key, uint seed)

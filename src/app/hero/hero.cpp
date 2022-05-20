@@ -1,6 +1,9 @@
-﻿#include "hero.h"
+﻿#pragma execution_character_set("utf-8")
+
+#include "hero.h"
 
 #include "hero/hero_sprite.h"
+#include "hero/hero_state.h"
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
 #include "scene/scene_manager.h"
@@ -10,38 +13,49 @@
 Hero::Hero()
 {
     scene_mgr_ = nullptr;
-    InitialState();
+    sprite_ = nullptr;
+    state_ = nullptr;
 }
 
 Hero::~Hero()
 {
 }
 
-HeroSprite* Hero::GetSprite() const
+void Hero::SetBattle(SceneManager* mgr)
+{
+    Q_ASSERT(sprite_);
+    Q_ASSERT(state_);
+
+    scene_mgr_ = mgr;
+    sprite_->setParentItem(scene_mgr_->GetHerosLayer());
+    SetCell(cell_);
+}
+
+// 设置精灵
+void Hero::SetHeroSprite(HeroSprite* sprite)
+{
+    sprite->setParent(this);
+    sprite_ = sprite;
+    sprite_->setParent(this);
+}
+
+// 设置属性
+void Hero::SetHeroState(HeroState* state)
+{
+    state->setParent(this);
+    state_ = state;
+    connect(state_, &HeroState::SgnBattleStateChange,
+            this, &Hero::UpdataHeroSpriteState);
+}
+
+HeroSprite* Hero::Sprite() const
 {
     return sprite_;
 }
 
-void Hero::SetBattle(SceneManager* mgr)
+HeroState* Hero::State() const
 {
-    scene_mgr_ = mgr;
-    if (sprite_) {
-        sprite_->setParentItem(scene_mgr_->GetHerosLayer());
-    }
-    SetCell(cell_);
-}
-
-void Hero::SetHeroSprite(HeroSprite* sprite)
-{
-    //    if (map_) { // 如果实体已在地图中
-    //        sprite_->underlying_item_->setParentItem(nullptr);
-    //        sprite->underlying_item_->setParentItem(map_->GetHerosLayer());
-    //        SetCell(cell_); // 确保新精灵在场景中的位置正确
-    //    }
-
-    // 设置内部精灵\指向新精灵的指针
-    sprite_ = sprite;
-    sprite_->setParent(this);
+    return state_;
 }
 
 // 设置位置
@@ -69,35 +83,18 @@ void Hero::SetPos(const QPointF& pos)
     }
 }
 
-// 跑进度条
-void Hero::ActionTimeAdvance()
-{
-    hero_state_.xu_li += base_properties_.xu_li_speed;
-    UpdataHeroSpriteState();
-}
-
-double Hero::GetActionProgess()
-{
-    return hero_state_.xu_li;
-}
-
-void Hero::ActionTimeReset()
-{
-    hero_state_.xu_li = 0.0;
-    base_properties_.surplus_xing_dong_li = base_properties_.xing_dong_li;
-    UpdataHeroSpriteState();
-}
-
 QList<Cell> Hero::GetMovingRange() const
 {
+    const int move_size = state_->battle_state_.value("行动力");
     auto path_map = scene_mgr_->GetPathMap();
-    return path_map->CanReachPath(GetCell(), base_properties_.surplus_xing_dong_li);
+    return path_map->CanReachPath(GetCell(), move_size);
 }
 
 QList<Cell> Hero::GetAttackRange() const
 {
+    const int move_size = state_->battle_state_.value("行动力");
     auto path_map = scene_mgr_->GetPathMap();
-    auto moving_range = path_map->CanReachPath(GetCell(), base_properties_.surplus_xing_dong_li);
+    auto moving_range = path_map->CanReachPath(GetCell(), move_size);
     moving_range << GetCell();
     QSet<Cell> attack_range;
     foreach (auto cell, moving_range) {
@@ -113,19 +110,18 @@ QList<Cell> Hero::GetAttackRange() const
 
 QList<Cell> Hero::GetMovingTrack(const Cell& new_cell) const
 {
+    const int can_move_size = state_->ability_state_.value("移动");
     auto path_map = scene_mgr_->GetPathMap();
-    auto cells = path_map->MovingPath(
-      GetCell(), base_properties_.xing_dong_li, new_cell);
+    auto cells = path_map->MovingPath(GetCell(), can_move_size, new_cell);
 
     return cells;
 }
 
 bool Hero::CanMoveToCell(Cell cell) const
 {
+    const int move_size = state_->battle_state_.value("行动力");
     auto path_map = scene_mgr_->GetPathMap();
-    auto cells = path_map->CanReachPath(
-      GetCell(),
-      base_properties_.surplus_xing_dong_li);
+    auto cells = path_map->CanReachPath(GetCell(), move_size);
     return cells.contains(cell);
 }
 
@@ -141,8 +137,9 @@ Cell Hero::GetTargetCell() const
 
 bool Hero::ConsumeXingDongLi(int data)
 {
-    if (base_properties_.surplus_xing_dong_li >= data) {
-        base_properties_.surplus_xing_dong_li -= data;
+    const int move_size = state_->battle_state_.value("行动力");
+    if (move_size >= data) {
+        state_->battle_state_["行动力"] = move_size - data;
         return true;
     }
     return false;
@@ -151,10 +148,6 @@ bool Hero::ConsumeXingDongLi(int data)
 QString Hero::BasePropertiesStr() const
 {
     QString str;
-
-    str += QString(u8"行动力:%1  \n").arg(base_properties_.xing_dong_li);
-    str += QString(u8"血量:%1  ").arg(hero_state_.xue_liang);
-    str += QString(u8"进度条:%1  ").arg(hero_state_.xu_li);
     return str;
 }
 
@@ -168,25 +161,11 @@ void Hero::SetOperate(const bool& operate)
     sprite_->SetOperate(operate);
 }
 
-void Hero::InitialState()
-{
-    // 人物基本属性
-    base_properties_.xing_dong_li = 3.0;
-    base_properties_.max_xue_liang = 100.0;
-    base_properties_.xu_li_speed = 1.0;
-    base_properties_.surplus_xing_dong_li = base_properties_.xing_dong_li;
-
-    // 人物状态
-    hero_state_.xue_liang = base_properties_.max_xue_liang;
-    hero_state_.xu_li = 0;
-
-    base_properties_.xu_li_speed += QRandomGenerator::global()->bounded(1.5);
-}
-
-// 更新英雄精灵状态
+// 更新英雄精灵状态（血槽、蓄力槽）
 void Hero::UpdataHeroSpriteState()
 {
-    sprite_->UpdataState(
-      hero_state_.xu_li / 100.0,
-      hero_state_.xue_liang / base_properties_.max_xue_liang);
+    const double data1 = state_->battle_state_.value("蓄力值") / 100.0;
+    const double data2 = state_->battle_state_.value("HP")
+      / state_->ability_state_.value("HP");
+    sprite_->UpdataState(data1, data2);
 }

@@ -41,8 +41,7 @@ void Battle::BeginWar()
 {
     scene_mgr_->Launch();
     round_mgr_->EndRound();
-
-    //    AudiosManager::Instance()->PlayBg(bg_music_key_);
+    AudiosManager::Instance()->PlayBg(bg_music_key_);
 }
 
 // 回合英雄改变

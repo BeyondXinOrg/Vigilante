@@ -86,13 +86,11 @@ QString HeroSprite::CurAnimation() const
     return cur_animation_;
 }
 
+// 更新属性（百分比）
 void HeroSprite::UpdataState(double xuli, double xue_liang)
 {
-    xu_li_item_->setPixmap(
-      xu_li_pix_.scaled(xuli * cao_width, 10));
-
-    xue_liang_item_->setPixmap(
-      xue_liang_pix_.scaled(xue_liang * cao_width, 10));
+    xu_li_item_->setPixmap(xu_li_pix_.scaled(xuli * cao_width, 10));
+    xue_liang_item_->setPixmap(xue_liang_pix_.scaled(xue_liang * cao_width, 10));
 }
 
 void HeroSprite::SetOperate(const bool& operate)
