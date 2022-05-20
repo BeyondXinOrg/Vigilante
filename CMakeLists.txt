@@ -26,6 +26,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "/MDd /Zi /Ob0 /Od /RTC1")
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network Concurrent Xml)
 add_definitions(-DQT_MESSAGELOGCONTEXT)
 
+include_directories("${CMAKE_CURRENT_LIST_DIR}/src")
+
+
 add_subdirectory(src)
 
 add_custom_target(clean-all
