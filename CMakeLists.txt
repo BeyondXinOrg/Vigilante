@@ -23,7 +23,7 @@ set(BUILD_SHARED_LIBS "" ON)
 set(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2 /DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "/MDd /Zi /Ob0 /Od /RTC1")
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network Concurrent Xml)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network Concurrent Xml Multimedia)
 add_definitions(-DQT_MESSAGELOGCONTEXT)
 
 include_directories("${CMAKE_CURRENT_LIST_DIR}/src")

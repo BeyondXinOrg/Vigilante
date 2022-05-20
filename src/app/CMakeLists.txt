@@ -27,4 +27,5 @@ target_link_libraries(
     Qt5::Concurrent
     Qt5::Network
     Qt5::Xml
+    Qt5::Multimedia
     )
