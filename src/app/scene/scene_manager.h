@@ -9,7 +9,6 @@
 class View;
 class QGraphicsScene;
 class QGraphicsRectItem;
-class TileSheet;
 class PathGrid;
 class LayoutTerrain;
 class CellGrid;
@@ -24,10 +23,15 @@ class SceneManager : public QObject
 public:
     SceneManager(CellGrid* cell_grid, int cell_size, QObject* parint = nullptr);
 
-    void Launch();
-
+    // 设置地图
+    void SetSceneMap(const QString& pix_path);
+    // 设置人物
     bool AddHero(Hero* hero);
     void RemoveHero(Hero* hero);
+    // 设置ui
+    void AddGui(Gui* gui);
+    // 战斗开始
+    void Launch();
 
     QGraphicsRectItem* GetHerosLayer() const;
     QGraphicsRectItem* GetGuiLayer() const;
@@ -42,8 +46,6 @@ public:
     Hero* GetCurMouseHero(const Cell& cell) const;
     TerrainType GetTerrainType(const Cell& cell) const;
     LayoutColourfulCell* GetLayoutColourfulCell() const;
-
-    void AddGui(Gui* gui);
 
     QSize GetViewSize() const;
 
@@ -70,8 +72,6 @@ private:
     QGraphicsRectItem* lay_heros_;
 
     QSet<Hero*> heros_;
-
-    TileSheet* tile_sheet_;
 };
 
 #endif // BATTLEMANAGER_H

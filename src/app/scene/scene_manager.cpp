@@ -6,7 +6,6 @@
 #include "scene/layout_terrain.h"
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
-#include "scene/tile_sheet.h"
 #include "scene/view.h"
 
 SceneManager::SceneManager(
@@ -25,21 +24,6 @@ SceneManager::SceneManager(
 {
     view_->SetSceneManager(this);
 
-    tile_sheet_ = new TileSheet("./2.png", 1, 5, 22, 22);
-    tile_sheet_->SetTileCell(Cell(0, 0), KTree_Cell);
-    tile_sheet_->SetTileCell(Cell(1, 0), KWall_Cell);
-    tile_sheet_->SetTileCell(Cell(3, 0), KNormal_Cell);
-
-    lay_terrain_->SetTileSheetData(tile_sheet_);
-    lay_terrain_->SetSceneManager(this);
-    lay_terrain_->Resize(path_grid_->Width(), path_grid_->Height());
-
-    lay_colourful_cell_->SetSceneManager(this);
-
-    scene_->addItem(lay_terrain_);
-    scene_->addItem(lay_colourful_cell_);
-    scene_->addItem(lay_heros_);
-
     QBrush bb;
     bb.setStyle(Qt::SolidPattern);
     bb.setColor(Qt::black);
@@ -48,8 +32,18 @@ SceneManager::SceneManager(
     view_->setScene(scene_);
 
     UpdataPathMap();
-
     InitConnect();
+
+    scene_->addItem(lay_terrain_);
+    scene_->addItem(lay_colourful_cell_);
+    scene_->addItem(lay_heros_);
+}
+
+void SceneManager::SetSceneMap(const QString& pix_path)
+{
+    lay_terrain_->Resize(path_grid_->Width(), path_grid_->Height());
+    lay_terrain_->SetSceneMap(pix_path);
+    lay_colourful_cell_->SetSceneManager(this);
 }
 
 void SceneManager::Launch()
@@ -112,10 +106,10 @@ PathMap* SceneManager::GetPathMap()
 void SceneManager::UpdataPathMap()
 {
     path_map_->UnFill();
-    auto cells = lay_terrain_->GetWallTerrainCell();
-    foreach (auto cell, cells) {
-        path_map_->Fill(cell);
-    }
+    //    auto cells = lay_terrain_->GetWallTerrainCell();
+    //    foreach (auto cell, cells) {
+    //        path_map_->Fill(cell);
+    //    }
     foreach (auto hero, heros_) {
         path_map_->Fill(hero->GetCell());
     }

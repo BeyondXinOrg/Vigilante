@@ -1,6 +1,7 @@
 ﻿#include <QApplication>
 
 #include "audios/audios_manager.h"
+#include "battle/generate_battle.h".h "
 #include "battle/warfare.h"
 
 int main(int argc, char* argv[])
@@ -8,11 +9,9 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
 
-    Battle warfare;
-    warfare.BeginWar();
-
-    AudiosManager::Instance()->LoadBgMusic("战斗音乐.测试1", "./resource/audios/battle.mp3");
-    AudiosManager::Instance()->PlayBg("战斗音乐.测试1");
+    GenerateBattle factory;
+    auto warfare = factory.GetBattle();
+    warfare->BeginWar();
 
     return a.exec();
 }
