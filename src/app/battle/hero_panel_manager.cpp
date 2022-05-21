@@ -1,32 +1,23 @@
 ﻿#include "hero_panel_manager.h"
 
+#include "gui/gui_terrain_description.h"
 #include "scene/layout_colourful_cell.h"
 #include "scene/scene_manager.h"
 
-HeroPanelManager::HeroPanelManager(SceneManager* scene_mgr)
+UIPanelManager::UIPanelManager(SceneManager* scene_mgr)
   : scene_mgr_(scene_mgr)
 {
+    ui_terrain_description_ = new GuiTerrainDescription();
+    scene_mgr_->AddGui(ui_terrain_description_);
 }
 
-void HeroPanelManager::ChangeShowHero(Hero* hero)
+void UIPanelManager::ClickedPosition(const Cell& cell)
 {
-    cur_hero_ = hero;
-    scene_mgr_->GetLayoutColourfulCell()->SetSelectHero(cur_hero_);
+    auto terrain_type = scene_mgr_->GetTerrainType(cell);
+    ui_terrain_description_->Describe(terrain_type);
 }
 
-void HeroPanelManager::ChangeShowHero(Cell click_cell)
+void UIPanelManager::ClearDecorate()
 {
-    auto click_hero = scene_mgr_->GetCurMouseHero(click_cell);
-
-    if (click_hero) {
-        cur_hero_ = click_hero;
-        scene_mgr_->GetLayoutColourfulCell()->SetSelectHero(click_hero);
-    } else {
-        scene_mgr_->GetLayoutColourfulCell()->SetSelectCell(click_cell);
-    }
-}
-
-void HeroPanelManager::ClearHero()
-{
-    scene_mgr_->GetLayoutColourfulCell()->ClearSelect();
+    ui_terrain_description_->ClearDescribe();
 }

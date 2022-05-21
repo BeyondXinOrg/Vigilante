@@ -6,11 +6,12 @@
 class Hero;
 class GuiPanel;
 
-class GUIlocationHero : public Gui
+// 定位当前英雄
+class GuiLocationHero : public Gui
 {
     Q_OBJECT
 public:
-    GUIlocationHero();
+    GuiLocationHero();
 
     QGraphicsItem* GetGraphicsItem() override;
     void SetSceneManager(SceneManager* scene_mgr) override;

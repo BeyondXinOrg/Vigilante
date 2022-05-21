@@ -1,4 +1,4 @@
-#include "gui.h"
+﻿#include "gui.h"
 
 Gui::Gui()
   : parent_gui_(nullptr)
@@ -77,6 +77,11 @@ QRectF Gui::GetGuiBoundingBox()
     total_box.moveTopLeft(QPointF(0, 0));
 
     return total_box;
+}
+
+void Gui::SetVisable(const bool& show)
+{
+    GetGraphicsItem()->setVisible(show);
 }
 
 QList<QRectF> Gui::GetBoundingBoxesFor(

@@ -6,6 +6,7 @@
 class Hero;
 class GuiPanel;
 
+// 当前英雄跳过回合
 class GUISkipRound : public Gui
 {
     Q_OBJECT
@@ -14,8 +15,6 @@ public:
 
     QGraphicsItem* GetGraphicsItem() override;
     void SetSceneManager(SceneManager* scene_mgr) override;
-
-    void SetVisable(bool show);
 
 Q_SIGNALS:
     void SgnSkipRound();

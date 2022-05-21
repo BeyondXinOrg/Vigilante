@@ -6,25 +6,24 @@
 #include <QHash>
 #include <QPointer>
 
-class Hero;
-class QTimer;
 class SceneManager;
-class GUIlocationHero;
-class GUISkipRound;
+class BriefPropertyPanel;
+class GuiTerrainDescription;
+class Hero;
 
-class HeroPanelManager : public QObject
+class UIPanelManager : public QObject
 {
     Q_OBJECT
 public:
-    HeroPanelManager(SceneManager* scene_mgr);
+    UIPanelManager(SceneManager* scene_mgr);
+    void ClickedPosition(const Cell& cell);
 
-    void ChangeShowHero(Hero* hero);
-    void ChangeShowHero(Cell click_cell);
-
-    void ClearHero();
+    void ClearDecorate();
 
 private:
     SceneManager* scene_mgr_;
+    GuiTerrainDescription* ui_terrain_description_;
+
     QPointer<Hero> cur_hero_;
 };
 

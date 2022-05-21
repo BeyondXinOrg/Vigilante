@@ -1,4 +1,4 @@
-#ifndef GUI_H
+﻿#ifndef GUI_H
 #define GUI_H
 
 #include <QGraphicsItem>
@@ -30,6 +30,9 @@ public:
 
     // 设置 manager
     virtual void SetSceneManager(SceneManager* scene_mgr) = 0;
+
+    // 是否隐藏
+    virtual void SetVisable(const bool& show);
 
 private:
     QList<QRectF> GetBoundingBoxesFor(QGraphicsItem* gi, QGraphicsItem* map_to);

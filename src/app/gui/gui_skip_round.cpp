@@ -27,11 +27,6 @@ void GUISkipRound::SetSceneManager(SceneManager* scene_mgr)
     location_btn_->setPos(QPointF(1920 - 50 - 50, 1080 - 300));
 }
 
-void GUISkipRound::SetVisable(bool show)
-{
-    location_btn_->setVisible(show);
-}
-
 void GUISkipRound::OnLoactionHero(
   GuiPanel* panel, QPointF pos, int button)
 {

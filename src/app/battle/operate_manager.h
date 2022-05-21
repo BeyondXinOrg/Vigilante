@@ -8,7 +8,7 @@
 class Hero;
 class QTimer;
 class SceneManager;
-class GUIlocationHero;
+class GuiLocationHero;
 class GUISkipRound;
 class HCPathMover;
 
@@ -38,10 +38,12 @@ public:
 
     void ChangeShowHero(Hero* hero);
     void ChangeShowHero(Cell click_cell);
-    void ClearHero();
+    void ClearDecorate();
 
 Q_SIGNALS:
+
     void SgnEndOperate();
+    void SgnMoveOrAttack();
     void SgnLocationOperateHero();
 
 private:
@@ -50,7 +52,7 @@ private:
 private:
     SceneManager* scene_mgr_;
 
-    GUIlocationHero* ui_location_hero_;
+    GuiLocationHero* ui_location_hero_;
     GUISkipRound* ui_skip_round_;
 
     HCPathMover* hc_path_mover_;

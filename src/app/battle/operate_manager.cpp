@@ -9,10 +9,10 @@
 OperateManager::OperateManager(SceneManager* scene_mgr)
   : scene_mgr_(scene_mgr)
 {
-    ui_location_hero_ = new GUIlocationHero;
+    ui_location_hero_ = new GuiLocationHero;
     scene_mgr_->AddGui(ui_location_hero_);
     ui_location_hero_->SetTargetHero();
-    connect(ui_location_hero_, &GUIlocationHero::SgnClickedLocation,
+    connect(ui_location_hero_, &GuiLocationHero::SgnClickedLocation,
             this, &OperateManager::SgnLocationOperateHero);
 
     ui_skip_round_ = new GUISkipRound;
@@ -34,6 +34,7 @@ void OperateManager::SetOperateHero(Hero* hero)
     ui_location_hero_->SetTargetHero(cur_hero_);
     scene_mgr_->MoveCamCenterToHero(cur_hero_);
     ui_skip_round_->SetVisable(true);
+    ui_location_hero_->SetVisable(true);
     ChangeShowHero(hero);
 }
 
@@ -85,16 +86,15 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
         }
     }
 
-    if (state_ == kREL_Select_Move) {
+    if (state_ == kREL_Select_Move) { // 选择移动位置
         scene_mgr_->GetLayoutColourfulCell()->SetMovingTrack(
           cur_hero_->GetMovingTrack(target_cell_));
     } else {
         scene_mgr_->GetLayoutColourfulCell()->HideMovingTrack();
     }
 
-    if (state_ == kOPE_Moving) {
-        ui_skip_round_->SetVisable(false);
-        scene_mgr_->GetLayoutColourfulCell()->ClearSelect();
+    if (state_ == kOPE_Moving) { // 移动
+        emit SgnMoveOrAttack();
         hc_path_mover_->SetHeroControlled(cur_hero_);
         hc_path_mover_->MoveHero(cur_hero_->GetMovingTrack(target_cell_));
     }
@@ -134,8 +134,10 @@ void OperateManager::ChangeShowHero(Cell click_cell)
     }
 }
 
-void OperateManager::ClearHero()
+void OperateManager::ClearDecorate()
 {
+    ui_skip_round_->SetVisable(false);
+    ui_location_hero_->SetVisable(false);
     scene_mgr_->GetLayoutColourfulCell()->ClearSelect();
 }
 
@@ -144,9 +146,14 @@ void OperateManager::OnHeroEndMoving(HCPathMover* by_mover)
     if (by_mover == hc_path_mover_
         && state_ == kOPE_Moving) {
         ui_skip_round_->SetVisable(true);
+        ui_location_hero_->SetVisable(true);
         state_ = kOPE_None;
         ChangeShowHero(cur_hero_);
-        //        emit SgnEndOperate();
-        //        ClearHero();
     }
 }
+
+// void EndOperateHero();
+// void OperateManager::EndOperateHero()
+//{
+//     emit SgnEndOperate();
+// }

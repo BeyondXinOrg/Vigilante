@@ -5,29 +5,29 @@
 
 #include <QSize>
 
-GUIlocationHero::GUIlocationHero()
+GuiLocationHero::GuiLocationHero()
   : location_btn_(new GuiPanel())
 {
     //    location_btn_->SetParentGui(this);
     target_hero_ = nullptr;
 
     connect(location_btn_, &GuiPanel::SgnClicked,
-            this, &GUIlocationHero::OnLoactionHero);
+            this, &GuiLocationHero::OnLoactionHero);
 }
 
-QGraphicsItem* GUIlocationHero::GetGraphicsItem()
+QGraphicsItem* GuiLocationHero::GetGraphicsItem()
 {
     return location_btn_;
 }
 
-void GUIlocationHero::SetSceneManager(SceneManager* scene_mgr)
+void GuiLocationHero::SetSceneManager(SceneManager* scene_mgr)
 {
     scene_mgr_ = scene_mgr;
     location_btn_->setVisible(false);
     location_btn_->setPos(QPointF(50, 1080 - 300));
 }
 
-void GUIlocationHero::SetTargetHero(Hero* target_hero)
+void GuiLocationHero::SetTargetHero(Hero* target_hero)
 {
     target_hero_ = target_hero;
     if (target_hero_) {
@@ -35,7 +35,7 @@ void GUIlocationHero::SetTargetHero(Hero* target_hero)
     }
 }
 
-void GUIlocationHero::OnLoactionHero(
+void GuiLocationHero::OnLoactionHero(
   GuiPanel* panel, QPointF pos, int button)
 {
     Q_UNUSED(panel)

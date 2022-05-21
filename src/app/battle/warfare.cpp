@@ -32,7 +32,7 @@ Battle::~Battle()
     delete cell_grid_;
     delete scene_mgr_;
     delete diplomacy_mgr_;
-    delete heropanel_mgr_;
+    delete panel_mgr_;
     delete operate_mgr_;
     delete round_mgr_;
 }
@@ -41,7 +41,7 @@ void Battle::BeginWar()
 {
     scene_mgr_->Launch();
     round_mgr_->EndRound();
-    AudiosManager::Instance()->PlayBg(bg_music_key_);
+    //    AudiosManager::Instance()->PlayBg(bg_music_key_);
 }
 
 // 回合英雄改变
@@ -53,12 +53,12 @@ void Battle::OnChangeRoundHero(Hero* hero)
 // 场景点击
 void Battle::OnSceneClick()
 {
-    if (!operate_mgr_->CanHandelClick()) {
-        return;
-    }
-
     auto click_cell = scene_mgr_->GetCurMouseCell();
-    operate_mgr_->ClickedPosition(click_cell);
+    panel_mgr_->ClickedPosition(click_cell);
+
+    if (operate_mgr_->CanHandelClick()) {
+        operate_mgr_->ClickedPosition(click_cell);
+    }
 }
 
 // 定位当前回合英雄
@@ -70,7 +70,19 @@ void Battle::OnLoactionRoundHero()
 // 回合英雄操作结束
 void Battle::OnEndOperate()
 {
+    // 清空操作、提示面板
+    operate_mgr_->ClearDecorate();
+    panel_mgr_->ClearDecorate();
+
     round_mgr_->EndRound();
+}
+
+// 英雄在移动或者攻击
+void Battle::OnMoveOrAttack()
+{
+    // 清空操作、提示面板
+    operate_mgr_->ClearDecorate();
+    panel_mgr_->ClearDecorate();
 }
 
 void Battle::GenerateScene(int x, int y, QString bg_pix_path)
@@ -79,7 +91,7 @@ void Battle::GenerateScene(int x, int y, QString bg_pix_path)
     scene_mgr_ = new SceneManager(cell_grid_, 128);
     scene_mgr_->SetSceneMap(bg_pix_path);
     diplomacy_mgr_ = new DiplomacyManager();
-    heropanel_mgr_ = new HeroPanelManager(scene_mgr_);
+    panel_mgr_ = new UIPanelManager(scene_mgr_);
     operate_mgr_ = new OperateManager(scene_mgr_);
     round_mgr_ = new RoundManager();
 
@@ -87,4 +99,5 @@ void Battle::GenerateScene(int x, int y, QString bg_pix_path)
     connect(round_mgr_, &RoundManager::SgnRoundHeroChange, this, &Battle::OnChangeRoundHero);
     connect(operate_mgr_, &OperateManager::SgnLocationOperateHero, this, &Battle::OnLoactionRoundHero);
     connect(operate_mgr_, &OperateManager::SgnEndOperate, this, &Battle::OnEndOperate);
+    connect(operate_mgr_, &OperateManager::SgnMoveOrAttack, this, &Battle::OnMoveOrAttack);
 }

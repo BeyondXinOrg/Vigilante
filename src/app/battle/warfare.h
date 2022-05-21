@@ -7,7 +7,7 @@
 class CellGrid;
 class SceneManager;
 class DiplomacyManager;
-class HeroPanelManager;
+class UIPanelManager;
 class OperateManager;
 class RoundManager;
 class Hero;
@@ -32,6 +32,7 @@ private:
     void OnSceneClick();
     void OnLoactionRoundHero();
     void OnEndOperate();
+    void OnMoveOrAttack();
 
     void GenerateScene(int x, int y, QString bg_pix_path);
 
@@ -40,7 +41,7 @@ private:
     SceneManager* scene_mgr_;
 
     DiplomacyManager* diplomacy_mgr_;
-    HeroPanelManager* heropanel_mgr_;
+    UIPanelManager* panel_mgr_;
     OperateManager* operate_mgr_;
     RoundManager* round_mgr_;
 
