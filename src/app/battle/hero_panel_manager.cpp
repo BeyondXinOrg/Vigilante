@@ -1,7 +1,6 @@
 ﻿#include "hero_panel_manager.h"
 
 #include "gui/gui_terrain_description.h"
-#include "scene/layout_colourful_cell.h"
 #include "scene/scene_manager.h"
 
 UIPanelManager::UIPanelManager(SceneManager* scene_mgr)

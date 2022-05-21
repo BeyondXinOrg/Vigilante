@@ -9,9 +9,6 @@ class SceneManager;
 class Gui : public QObject
 {
     Q_OBJECT
-
-    friend class Game;
-
 public:
     Gui();
     virtual ~Gui();

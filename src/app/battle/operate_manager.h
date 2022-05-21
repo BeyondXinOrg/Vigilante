@@ -11,6 +11,7 @@ class SceneManager;
 class GuiLocationHero;
 class GUISkipRound;
 class HCPathMover;
+class TDColourfulCell;
 
 class OperateManager : public QObject
 {
@@ -54,7 +55,7 @@ private:
 
     GuiLocationHero* ui_location_hero_;
     GUISkipRound* ui_skip_round_;
-
+    TDColourfulCell* td_colourful_cell_;
     HCPathMover* hc_path_mover_;
 
     QPointer<Hero> cur_hero_;

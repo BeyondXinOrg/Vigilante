@@ -20,8 +20,6 @@ public:
     QPoint GetCenterCamPos() const;
     void SetCenterCamPos(QPointF position);
 
-    void AddGui(Gui* gui);
-
 protected:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
@@ -44,7 +42,6 @@ private:
     double cam_rect_[2];
     double cam_pos_max_[2];
 
-    QGraphicsRectItem* lay_gui_;
     QTimer* gui_update_timer_;
 };
 

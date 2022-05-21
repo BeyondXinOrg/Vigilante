@@ -1,25 +1,28 @@
-﻿#ifndef LAYOUTCOLOURFULCELL_H
-#define LAYOUTCOLOURFULCELL_H
+﻿#ifndef TDCOLOURFULCELL_H
+#define TDCOLOURFULCELL_H
 
 #include "data/cell_grid.h"
+#include "gui/terrain_decoration.h"
 
 #include <QGraphicsItem>
 #include <QPen>
 
 class Hero;
-class SceneManager;
 
-class LayoutColourfulCell : public QGraphicsItem
+class TDColourfulCell : public TerrainDecoration, public QGraphicsItem
 {
 public:
-    LayoutColourfulCell(QGraphicsItem* parent = nullptr);
-    void SetSceneManager(SceneManager* scene_mgr);
+    TDColourfulCell();
+    ~TDColourfulCell() override;
+
+    QGraphicsItem* GetGraphicsItem() override;
+    void SetSceneManager(SceneManager* scene_mgr) override;
     QRectF boundingRect() const override;
 
     void SetSelectHero(Hero* hero);
     void SetSelectCell(const Cell& cell);
 
-    void SetMovingTrack(QList<Cell> cell);
+    void SetMovingTrack(QList<Cell> cells);
     void HideMovingTrack();
 
     void ClearSelect();
@@ -31,8 +34,6 @@ protected:
     void UpdataTerrainBg();
 
 private:
-    SceneManager* scene_mgr_;
-
     QPixmap bg_pix_;
     QRectF rect_;
 
@@ -47,4 +48,4 @@ private:
     QList<QPointF> move_track_pos_;
 };
 
-#endif // LAYOUTCOLOURFULCELL_H
+#endif // TDCOLOURFULCELL_H

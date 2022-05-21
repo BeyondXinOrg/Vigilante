@@ -1,4 +1,4 @@
-﻿#include "layout_colourful_cell.h"
+﻿#include "td_colourful_cell.h"
 
 #include "hero/hero.h"
 #include "scene/path_grid.h"
@@ -7,8 +7,7 @@
 #include <QPainter>
 #include <QRectF>
 
-LayoutColourfulCell::LayoutColourfulCell(QGraphicsItem* parent)
-  : QGraphicsItem(parent)
+TDColourfulCell::TDColourfulCell()
 {
     scene_mgr_ = nullptr;
 
@@ -24,7 +23,16 @@ LayoutColourfulCell::LayoutColourfulCell(QGraphicsItem* parent)
     show_move_track_ = false;
 }
 
-void LayoutColourfulCell::SetSceneManager(SceneManager* scene_mgr)
+TDColourfulCell::~TDColourfulCell()
+{
+}
+
+QGraphicsItem* TDColourfulCell::GetGraphicsItem()
+{
+    return this;
+}
+
+void TDColourfulCell::SetSceneManager(SceneManager* scene_mgr)
 {
     scene_mgr_ = scene_mgr;
     rect_ = QRectF(0, 0,
@@ -33,14 +41,13 @@ void LayoutColourfulCell::SetSceneManager(SceneManager* scene_mgr)
     UpdataTerrainBg();
 }
 
-QRectF LayoutColourfulCell::boundingRect() const
+QRectF TDColourfulCell::boundingRect() const
 {
     return rect_;
 }
 
-void LayoutColourfulCell::SetSelectHero(Hero* hero)
+void TDColourfulCell::SetSelectHero(Hero* hero)
 {
-
     if (!scene_mgr_) { // 无场景
         return;
     }
@@ -78,9 +85,8 @@ void LayoutColourfulCell::SetSelectHero(Hero* hero)
     UpdataTerrainBg();
 }
 
-void LayoutColourfulCell::SetSelectCell(const Cell& cell)
+void TDColourfulCell::SetSelectCell(const Cell& cell)
 {
-
     if (!scene_mgr_) { // 无场景
         return;
     }
@@ -94,7 +100,7 @@ void LayoutColourfulCell::SetSelectCell(const Cell& cell)
     UpdataTerrainBg(); // 更新背景图片
 }
 
-void LayoutColourfulCell::SetMovingTrack(QList<Cell> cells)
+void TDColourfulCell::SetMovingTrack(QList<Cell> cells)
 {
     show_move_track_ = true;
     move_track_pos_.clear();
@@ -106,7 +112,7 @@ void LayoutColourfulCell::SetMovingTrack(QList<Cell> cells)
     UpdataTerrainBg(); // 更新背景图片
 }
 
-void LayoutColourfulCell::HideMovingTrack()
+void TDColourfulCell::HideMovingTrack()
 {
     show_move_track_ = false;
     move_track_pos_.clear();
@@ -114,16 +120,13 @@ void LayoutColourfulCell::HideMovingTrack()
     UpdataTerrainBg(); // 更新背景图片
 }
 
-void LayoutColourfulCell::ClearSelect()
+void TDColourfulCell::ClearSelect()
 {
-    move_range_rects_.clear();
-    attack_range_rects_.clear();
-    select_rect_ = QRect();
-    UpdataTerrainBg();
 }
 
-void LayoutColourfulCell::paint(
-  QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget)
+void TDColourfulCell::paint(
+  QPainter* painter,
+  const QStyleOptionGraphicsItem* item, QWidget* widget)
 {
     Q_UNUSED(item)
     Q_UNUSED(widget)
@@ -132,7 +135,7 @@ void LayoutColourfulCell::paint(
     painter->drawPixmap(0, 0, bg_pix_);
 }
 
-void LayoutColourfulCell::UpdataTerrainBg()
+void TDColourfulCell::UpdataTerrainBg()
 {
     if (!scene_mgr_) {
         return;

@@ -15,7 +15,7 @@ class CellGrid;
 class PathGrid;
 class PathMap;
 class Gui;
-class LayoutColourfulCell;
+class TerrainDecoration;
 
 class SceneManager : public QObject
 {
@@ -30,6 +30,8 @@ public:
     void RemoveHero(Hero* hero);
     // 设置ui
     void AddGui(Gui* gui);
+    // 设置地形装饰
+    void AddTerrainDecoration(TerrainDecoration* td);
     // 战斗开始
     void Launch();
 
@@ -45,7 +47,6 @@ public:
     Hero* GetCurMouseHero() const;
     Hero* GetCurMouseHero(const Cell& cell) const;
     TerrainType GetTerrainType(const Cell& cell) const;
-    LayoutColourfulCell* GetLayoutColourfulCell() const;
 
     QSize GetViewSize() const;
 
@@ -68,8 +69,9 @@ private:
     PathMap* path_map_;
 
     LayoutTerrain* lay_terrain_;
-    LayoutColourfulCell* lay_colourful_cell_;
+    QGraphicsRectItem* lay_terrain_decoration_;
     QGraphicsRectItem* lay_heros_;
+    QGraphicsRectItem* lay_gui_;
 
     QSet<Hero*> heros_;
 };

@@ -2,7 +2,7 @@
 
 #include "data/cell_grid.h"
 #include "gui/gui.h"
-#include "scene/layout_colourful_cell.h"
+#include "gui/terrain_decoration.h"
 #include "scene/layout_terrain.h"
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
@@ -19,8 +19,9 @@ SceneManager::SceneManager(
   , path_map_(new PathMap(cell_grid_))
 
   , lay_terrain_(new LayoutTerrain())
-  , lay_colourful_cell_(new LayoutColourfulCell())
+  , lay_terrain_decoration_(new QGraphicsRectItem())
   , lay_heros_(new QGraphicsRectItem())
+  , lay_gui_(new QGraphicsRectItem())
 {
     view_->SetSceneManager(this);
 
@@ -35,15 +36,15 @@ SceneManager::SceneManager(
     InitConnect();
 
     scene_->addItem(lay_terrain_);
-    scene_->addItem(lay_colourful_cell_);
+    scene_->addItem(lay_terrain_decoration_);
     scene_->addItem(lay_heros_);
+    scene_->addItem(lay_gui_);
 }
 
 void SceneManager::SetSceneMap(const QString& pix_path)
 {
     lay_terrain_->Resize(path_grid_->Width(), path_grid_->Height());
     lay_terrain_->SetSceneMap(pix_path);
-    lay_colourful_cell_->SetSceneManager(this);
 }
 
 void SceneManager::Launch()
@@ -84,7 +85,7 @@ QGraphicsRectItem* SceneManager::GetHerosLayer() const
 
 QGraphicsRectItem* SceneManager::GetGuiLayer() const
 {
-    return lay_heros_;
+    return lay_gui_;
 }
 
 CellGrid* SceneManager::GetCellGrid() const
@@ -150,16 +151,18 @@ TerrainType SceneManager::GetTerrainType(const Cell& cell) const
     return lay_terrain_->GetTerrainType(cell);
 }
 
-// 先直接获取层出去
-LayoutColourfulCell* SceneManager::GetLayoutColourfulCell() const
-{
-    return lay_colourful_cell_;
-}
-
+// 设置ui
 void SceneManager::AddGui(Gui* gui)
 {
-    view_->AddGui(gui);
+    gui->GetGraphicsItem()->setParentItem(lay_gui_);
     gui->SetSceneManager(this);
+}
+
+// 设置地形装饰
+void SceneManager::AddTerrainDecoration(TerrainDecoration* td)
+{
+    td->GetGraphicsItem()->setParentItem(lay_terrain_decoration_);
+    td->SetSceneManager(this);
 }
 
 QSize SceneManager::GetViewSize() const

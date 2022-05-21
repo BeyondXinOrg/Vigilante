@@ -13,7 +13,6 @@
 
 View::View(QWidget* parent)
   : QGraphicsView(parent)
-  , lay_gui_(new QGraphicsRectItem())
 {
     // 禁用QGraphicsView的滚动条
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -51,8 +50,6 @@ void View::ShowWidget(int w, int h)
     cam_pos_max_[0] = scene_mgr_->GetPathGrid()->Width() - w;
     cam_pos_max_[1] = scene_mgr_->GetPathGrid()->Height() - h;
 
-    scene()->addItem(lay_gui_);
-
     showNormal();
 
     //    gui_update_timer_->start(0);
@@ -86,11 +83,6 @@ void View::SetCenterCamPos(QPointF position)
     UpdateGuiPositions();
     this->scene()->update();
     this->update();
-}
-
-void View::AddGui(Gui* gui)
-{
-    gui->GetGraphicsItem()->setParentItem(lay_gui_);
 }
 
 void View::mousePressEvent(QMouseEvent* event)
@@ -193,5 +185,5 @@ void View::wheelEvent(QWheelEvent* event)
 
 void View::UpdateGuiPositions()
 {
-    lay_gui_->setPos(mapToScene(QPoint(0, 0)));
+    scene_mgr_->GetGuiLayer()->setPos(mapToScene(QPoint(0, 0)));
 }
