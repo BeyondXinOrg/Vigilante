@@ -135,7 +135,7 @@ Hero* SceneManager::GetCurMouseHero() const
     return nullptr;
 }
 
-Hero* SceneManager::GetCurMouseHero(const Cell& cell) const
+Hero* SceneManager::GetCellHero(const Cell& cell) const
 {
     foreach (auto hero, heros_) {
         if (hero->GetCell() == cell) {

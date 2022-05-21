@@ -9,6 +9,7 @@
 class SceneManager;
 class BriefPropertyPanel;
 class GuiTerrainDescription;
+class GuiHeroDescription;
 class Hero;
 
 class UIPanelManager : public QObject
@@ -23,6 +24,7 @@ public:
 private:
     SceneManager* scene_mgr_;
     GuiTerrainDescription* ui_terrain_description_;
+    GuiHeroDescription* ui_hero_description_;
 
     QPointer<Hero> cur_hero_;
 };

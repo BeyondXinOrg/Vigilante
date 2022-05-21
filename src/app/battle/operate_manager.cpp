@@ -32,7 +32,7 @@ OperateManager::OperateManager(SceneManager* scene_mgr)
 void OperateManager::SetOperateHero(Hero* hero)
 {
     cur_hero_ = hero;
-    cur_hero_->SetOperate(true);
+
     can_operate_ = true;
     state_ = kOPE_None;
     ui_location_hero_->SetTargetHero(cur_hero_);
@@ -50,7 +50,7 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
         return;
     }
 
-    auto click_hero = scene_mgr_->GetCurMouseHero(click_cell);
+    auto click_hero = scene_mgr_->GetCellHero(click_cell);
 
     if (!can_operate_) {
         if (click_hero == cur_hero_) {
@@ -129,7 +129,7 @@ void OperateManager::ChangeShowHero(Hero* hero)
 
 void OperateManager::ChangeShowHero(Cell click_cell)
 {
-    auto click_hero = scene_mgr_->GetCurMouseHero(click_cell);
+    auto click_hero = scene_mgr_->GetCellHero(click_cell);
     if (click_hero) {
         td_colourful_cell_->SetSelectHero(click_hero);
     } else {

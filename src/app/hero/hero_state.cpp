@@ -39,3 +39,15 @@ void HeroState::PrepareAction()
     battle_state_["蓄力值"] += ability_state_.value("蓄力");
     emit SgnBattleStateChange();
 }
+
+QString HeroState::GetBattleState() const
+{
+    QString str;
+
+    str += QString(u8"行动力:%1  ").arg(battle_state_["行动力"]);
+    str += QString(u8"血量:%1  ").arg(battle_state_["HP"]);
+    str += QString(u8"攻击:%1  ").arg(battle_state_["攻击"]);
+    str += QString(u8"防守:%1  ").arg(battle_state_["防守"]);
+
+    return str;
+}

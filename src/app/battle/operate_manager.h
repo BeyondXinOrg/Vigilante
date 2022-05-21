@@ -24,7 +24,7 @@ public:
         kOPE_Skill, // 释放技能
         kOPE_Moving, // 移动
         kREL_Select_Move, // 选择移动地点
-        kREL_Select_Accack, // 选择移动地点
+        kREL_Select_Accack, // 选择攻击地点
         kREL_Select_Skill_Pos, // 选择施法地点
     };
 

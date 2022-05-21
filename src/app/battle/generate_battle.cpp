@@ -161,10 +161,11 @@ Hero* GenerateBattle::CreateHero(QString key)
 
     QString animation_png = LoadConfigCell(row, 3).toString();
     QString state_key = LoadConfigCell(row, 6).toString();
+    QString hero_name = LoadConfigCell(row, 2).toString();
 
     hero->SetHeroState(CreateHeroState(state_key));
     hero->SetHeroSprite(CreateHeroSprite(resources_.value(animation_png)));
-
+    hero->State()->name_ = hero_name;
     return hero;
 }
 

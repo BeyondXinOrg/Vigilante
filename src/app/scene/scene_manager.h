@@ -45,7 +45,7 @@ public:
 
     Cell GetCurMouseCell() const;
     Hero* GetCurMouseHero() const;
-    Hero* GetCurMouseHero(const Cell& cell) const;
+    Hero* GetCellHero(const Cell& cell) const;
     TerrainType GetTerrainType(const Cell& cell) const;
 
     QSize GetViewSize() const;

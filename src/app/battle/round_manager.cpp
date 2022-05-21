@@ -40,6 +40,7 @@ Hero* RoundManager::GetRoundHero()
 void RoundManager::EndRound()
 {
     if (round_hero_) {
+        round_hero_->SetOperate(false);
         round_hero_->State()->EndRound();
         round_hero_ = nullptr;
     }
@@ -54,6 +55,7 @@ void RoundManager::OnTimerAdvance()
         if (progress >= 100) {
             timer_speed_->stop();
             round_hero_ = hero;
+            round_hero_->SetOperate(true);
             emit SgnRoundHeroChange(round_hero_);
             return;
         }

@@ -48,6 +48,7 @@ void Battle::BeginWar()
 void Battle::OnChangeRoundHero(Hero* hero)
 {
     operate_mgr_->SetOperateHero(hero);
+    panel_mgr_->ClickedPosition(hero->GetCell());
 }
 
 // 场景点击

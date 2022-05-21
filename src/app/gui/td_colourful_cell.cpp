@@ -122,6 +122,10 @@ void TDColourfulCell::HideMovingTrack()
 
 void TDColourfulCell::ClearSelect()
 {
+    move_range_rects_.clear();
+    attack_range_rects_.clear();
+    select_rect_ = QRect();
+    UpdataTerrainBg();
 }
 
 void TDColourfulCell::paint(
