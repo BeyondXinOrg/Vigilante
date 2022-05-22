@@ -45,6 +45,7 @@ Q_SIGNALS:
 
     void SgnEndOperate();
     void SgnMoveOrAttack();
+    void SgnEndMoveOrAttack();
     void SgnLocationOperateHero();
 
 private:
@@ -55,6 +56,7 @@ private:
 
     GuiLocationHero* ui_location_hero_;
     GUISkipRound* ui_skip_round_;
+
     TDColourfulCell* td_colourful_cell_;
     HCPathMover* hc_path_mover_;
 

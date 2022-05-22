@@ -62,6 +62,8 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
             if (cur_hero_->CanMoveToCell(click_cell)) { // 是否可以移动
                 target_cell_ = click_cell;
                 state_ = kREL_Select_Move;
+            } else if (click_cell == cur_hero_->GetCell()) {
+                can_operate_ = true;
             } else {
                 can_operate_ = false;
             }
@@ -77,6 +79,7 @@ void OperateManager::ClickedPosition(const Cell& click_cell)
                 state_ = kREL_Select_Move;
             } else if (click_cell == cur_hero_->GetCell()) {
                 state_ = kOPE_None;
+                can_operate_ = true;
             } else {
                 can_operate_ = false;
                 state_ = kOPE_None;
@@ -146,12 +149,8 @@ void OperateManager::ClearDecorate()
 
 void OperateManager::OnHeroEndMoving(HCPathMover* by_mover)
 {
-    if (by_mover == hc_path_mover_
-        && state_ == kOPE_Moving) {
-        ui_skip_round_->SetVisable(true);
-        ui_location_hero_->SetVisable(true);
-        state_ = kOPE_None;
-        ChangeShowHero(cur_hero_);
+    if (by_mover == hc_path_mover_ && state_ == kOPE_Moving) {
+        emit SgnEndMoveOrAttack();
     }
 }
 

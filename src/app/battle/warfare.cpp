@@ -48,17 +48,23 @@ void Battle::BeginWar()
 void Battle::OnChangeRoundHero(Hero* hero)
 {
     operate_mgr_->SetOperateHero(hero);
-    panel_mgr_->ClickedPosition(hero->GetCell());
+    panel_mgr_->ChangeDescription(hero->GetCell());
 }
 
 // 场景点击
 void Battle::OnSceneClick()
 {
     auto click_cell = scene_mgr_->GetCurMouseCell();
-    panel_mgr_->ClickedPosition(click_cell);
 
     if (operate_mgr_->CanHandelClick()) {
         operate_mgr_->ClickedPosition(click_cell);
+    }
+
+    if (operate_mgr_->CanOperate()) {
+        panel_mgr_->ChangeDescription(round_mgr_->GetRoundHero()->GetCell());
+        panel_mgr_->ChangeTerrainDescription(click_cell);
+    } else {
+        panel_mgr_->ChangeDescription(click_cell);
     }
 }
 
@@ -66,6 +72,7 @@ void Battle::OnSceneClick()
 void Battle::OnLoactionRoundHero()
 {
     operate_mgr_->SetOperateHero(round_mgr_->GetRoundHero());
+    panel_mgr_->ChangeDescription(round_mgr_->GetRoundHero()->GetCell());
 }
 
 // 回合英雄操作结束
@@ -101,4 +108,5 @@ void Battle::GenerateScene(int x, int y, QString bg_pix_path)
     connect(operate_mgr_, &OperateManager::SgnLocationOperateHero, this, &Battle::OnLoactionRoundHero);
     connect(operate_mgr_, &OperateManager::SgnEndOperate, this, &Battle::OnEndOperate);
     connect(operate_mgr_, &OperateManager::SgnMoveOrAttack, this, &Battle::OnMoveOrAttack);
+    connect(operate_mgr_, &OperateManager::SgnEndMoveOrAttack, this, &Battle::OnLoactionRoundHero);
 }

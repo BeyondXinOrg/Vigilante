@@ -17,7 +17,10 @@ class UIPanelManager : public QObject
     Q_OBJECT
 public:
     UIPanelManager(SceneManager* scene_mgr);
-    void ClickedPosition(const Cell& cell);
+
+    void ChangeDescription(const Cell& cell);
+    void ChangeTerrainDescription(const Cell& cell);
+    void ChangeHeroDescription(const Cell& cell);
 
     void ClearDecorate();
 
