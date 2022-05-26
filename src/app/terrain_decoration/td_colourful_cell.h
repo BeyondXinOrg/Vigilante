@@ -2,7 +2,7 @@
 #define TDCOLOURFULCELL_H
 
 #include "data/cell_grid.h"
-#include "gui/terrain_decoration.h"
+#include "terrain_decoration/terrain_decoration.h"
 
 #include <QGraphicsItem>
 #include <QPen>

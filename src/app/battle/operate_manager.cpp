@@ -2,9 +2,9 @@
 
 #include "gui/gui_location_hero.h"
 #include "gui/gui_skip_round.h"
-#include "gui/td_colourful_cell.h"
 #include "hero/hc_path_mover.h"
 #include "scene/scene_manager.h"
+#include "terrain_decoration/td_colourful_cell.h"
 
 OperateManager::OperateManager(SceneManager* scene_mgr)
   : scene_mgr_(scene_mgr)

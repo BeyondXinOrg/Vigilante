@@ -41,7 +41,7 @@ void AudiosManager::InitPlayer()
     bg_list_ = new QMediaPlaylist(this);
     bg_list_->setPlaybackMode(QMediaPlaylist::Loop);
     bg_player_->setPlaylist(bg_list_);
-    bg_player_->setVolume(100);
+    bg_player_->setVolume(10);
 }
 
 AudiosManager::AudiosManager(QObject* parent)

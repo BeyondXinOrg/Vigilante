@@ -6,12 +6,12 @@
 #include <QSize>
 
 GUISkipRound::GUISkipRound()
-  : location_btn_(new GuiPanel())
+  : location_btn_(new GuiButon())
 {
     //    location_btn_->SetParentGui(this);
     target_hero_ = nullptr;
 
-    connect(location_btn_, &GuiPanel::SgnClicked,
+    connect(location_btn_, &GuiButon::SgnClicked,
             this, &GUISkipRound::OnLoactionHero);
 }
 
@@ -28,7 +28,7 @@ void GUISkipRound::SetSceneManager(SceneManager* scene_mgr)
 }
 
 void GUISkipRound::OnLoactionHero(
-  GuiPanel* panel, QPointF pos, int button)
+  GuiButon* panel, QPointF pos, int button)
 {
     Q_UNUSED(panel)
     Q_UNUSED(pos)

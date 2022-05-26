@@ -3,17 +3,17 @@
 
 #include "gui.h"
 
-class GuiPanel : public Gui, public QGraphicsPixmapItem
+class GuiButon : public Gui, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    GuiPanel();
+    GuiButon();
 
     QGraphicsItem* GetGraphicsItem() override;
     void SetSceneManager(SceneManager* scene_mgr) override;
 
 Q_SIGNALS:
-    void SgnClicked(GuiPanel* panel, QPointF pos, int button);
+    void SgnClicked(GuiButon* panel, QPointF pos, int button);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

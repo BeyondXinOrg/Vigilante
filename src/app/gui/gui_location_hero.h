@@ -4,7 +4,7 @@
 #include "gui.h"
 
 class Hero;
-class GuiPanel;
+class GuiButon;
 
 // 定位当前英雄
 class GuiLocationHero : public Gui
@@ -22,10 +22,10 @@ Q_SIGNALS:
     void SgnClickedLocation();
 
 private:
-    void OnLoactionHero(GuiPanel* panel, QPointF pos, int button);
+    void OnLoactionHero(GuiButon* panel, QPointF pos, int button);
 
 private:
-    GuiPanel* location_btn_;
+    GuiButon* location_btn_;
 
     Hero* target_hero_;
 };

@@ -4,7 +4,7 @@
 #include "gui.h"
 
 class Hero;
-class GuiPanel;
+class GuiButon;
 
 // 当前英雄跳过回合
 class GUISkipRound : public Gui
@@ -20,10 +20,10 @@ Q_SIGNALS:
     void SgnSkipRound();
 
 private:
-    void OnLoactionHero(GuiPanel* panel, QPointF pos, int button);
+    void OnLoactionHero(GuiButon* panel, QPointF pos, int button);
 
 private:
-    GuiPanel* location_btn_;
+    GuiButon* location_btn_;
 
     Hero* target_hero_;
 };

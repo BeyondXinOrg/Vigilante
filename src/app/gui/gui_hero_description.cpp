@@ -2,6 +2,7 @@
 
 #include "gui_hero_description.h"
 
+#include "gui/gui_panel.h"
 #include "hero/hero.h"
 #include "hero/hero_state.h"
 
@@ -56,10 +57,9 @@ void HeroDescriptionItem::paint(
     painter->restore();
 }
 
-void HeroDescriptionItem::SetVisible(const bool& show)
+void HeroDescriptionItem::SetVisable(const bool& show)
 {
     // 首次绘制 drawText 会造成卡顿，不使用自带的setVisable
-
     if (!show) {
         title_ = " ";
         content_ = " ";
@@ -67,9 +67,29 @@ void HeroDescriptionItem::SetVisible(const bool& show)
     show_ = show;
 }
 
+QGraphicsItem* HeroDescriptionItem::GetGraphicsItem()
+{
+    return this;
+}
+
+void HeroDescriptionItem::SetSceneManager(SceneManager* scene_mgr)
+{
+    scene_mgr_ = scene_mgr;
+}
+
 GuiHeroDescription::GuiHeroDescription()
   : center_item_(new HeroDescriptionItem())
 {
+    for (int i = 0; i < 7; i++) {
+        auto location_btn = new GuiButon();
+        location_btn->setParentItem(center_item_);
+        location_btn->setPos(40 + 100 * i, 80);
+        location_btn->SetParentGui(center_item_);
+        location_btns_ << location_btn;
+    }
+    center_item_->SetParentGui(this);
+
+    ClearDescribe();
 }
 
 QGraphicsItem* GuiHeroDescription::GetGraphicsItem()
@@ -86,19 +106,16 @@ void GuiHeroDescription::SetSceneManager(SceneManager* scene_mgr)
 
 void GuiHeroDescription::Describe(Hero* hero)
 {
+    SetVisable(true);
 
     QString title, content;
-
     title = hero->State()->name_;
     content = hero->State()->GetBattleState();
 
-    center_item_->SetVisible(true);
     center_item_->UpdataInfo(title, content);
-    center_item_->update();
 }
 
 void GuiHeroDescription::ClearDescribe()
 {
-    center_item_->SetVisible(false);
-    center_item_->update();
+    SetVisable(false);
 }

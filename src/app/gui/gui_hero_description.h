@@ -4,9 +4,10 @@
 #include "gui.h"
 #include "scene/layout_terrain.h"
 
+class GuiButon;
 class Hero;
 
-class HeroDescriptionItem : public QGraphicsItem
+class HeroDescriptionItem : public Gui, public QGraphicsItem
 {
 public:
     HeroDescriptionItem(QGraphicsItem* parent = nullptr);
@@ -16,7 +17,9 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget) override;
 
-    void SetVisible(const bool& show);
+    void SetVisable(const bool& show) override;
+    QGraphicsItem* GetGraphicsItem() override;
+    void SetSceneManager(SceneManager* scene_mgr) override;
 
 private:
     QRectF rect_;
@@ -49,6 +52,8 @@ public:
 
 private:
     HeroDescriptionItem* center_item_;
+
+    QList<GuiButon*> location_btns_;
 };
 
 #endif // GUIHERODESCRIPTION_H

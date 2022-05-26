@@ -2,11 +2,11 @@
 
 #include "data/cell_grid.h"
 #include "gui/gui.h"
-#include "gui/terrain_decoration.h"
 #include "scene/layout_terrain.h"
 #include "scene/path_grid.h"
 #include "scene/path_map.h"
 #include "scene/view.h"
+#include "terrain_decoration/terrain_decoration.h"
 
 SceneManager::SceneManager(
   CellGrid* cell_grid, int cell_size, QObject* parint)

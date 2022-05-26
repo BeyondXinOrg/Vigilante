@@ -6,12 +6,11 @@
 #include <QSize>
 
 GuiLocationHero::GuiLocationHero()
-  : location_btn_(new GuiPanel())
+  : location_btn_(new GuiButon())
 {
-    //    location_btn_->SetParentGui(this);
     target_hero_ = nullptr;
 
-    connect(location_btn_, &GuiPanel::SgnClicked,
+    connect(location_btn_, &GuiButon::SgnClicked,
             this, &GuiLocationHero::OnLoactionHero);
 }
 
@@ -36,7 +35,7 @@ void GuiLocationHero::SetTargetHero(Hero* target_hero)
 }
 
 void GuiLocationHero::OnLoactionHero(
-  GuiPanel* panel, QPointF pos, int button)
+  GuiButon* panel, QPointF pos, int button)
 {
     Q_UNUSED(panel)
     Q_UNUSED(pos)

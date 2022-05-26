@@ -82,6 +82,10 @@ QRectF Gui::GetGuiBoundingBox()
 void Gui::SetVisable(const bool& show)
 {
     GetGraphicsItem()->setVisible(show);
+
+    foreach (auto var, child_guis_) {
+        var->SetVisable(show);
+    }
 }
 
 QList<QRectF> Gui::GetBoundingBoxesFor(

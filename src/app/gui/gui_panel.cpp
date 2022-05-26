@@ -2,7 +2,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-GuiPanel::GuiPanel()
+GuiButon::GuiButon()
   : border_(new QGraphicsRectItem())
 {
     setAcceptHoverEvents(true);
@@ -14,21 +14,21 @@ GuiPanel::GuiPanel()
     Draw();
 }
 
-QGraphicsItem* GuiPanel::GetGraphicsItem()
+QGraphicsItem* GuiButon::GetGraphicsItem()
 {
     return this;
 }
 
-void GuiPanel::SetSceneManager(SceneManager* scene_mgr)
+void GuiButon::SetSceneManager(SceneManager* scene_mgr)
 {
     scene_mgr_ = scene_mgr;
 }
 
-void GuiPanel::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void GuiButon::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     emit SgnClicked(this, event->pos(), event->button());
 }
 
-void GuiPanel::Draw()
+void GuiButon::Draw()
 {
 }
