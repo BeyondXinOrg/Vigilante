@@ -4,27 +4,7 @@
 #include "gui.h"
 #include "scene/layout_terrain.h"
 
-class TerrainDescriptionItem : public QGraphicsItem
-{
-public:
-    TerrainDescriptionItem(QGraphicsItem* parent = nullptr);
-
-    void UpdataInfo(const QString& title, const QString& content);
-
-    QRectF boundingRect() const override;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget) override;
-
-    void SetVisible(const bool& show);
-
-private:
-    QRectF rect_;
-
-    QString title_;
-    QString content_;
-
-    bool show_;
-};
-
+class TerrainDescriptionItem;
 class GuiTerrainDescription : public Gui
 {
     Q_OBJECT

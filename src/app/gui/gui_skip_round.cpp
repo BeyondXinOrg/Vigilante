@@ -1,6 +1,6 @@
 ﻿#include "gui_skip_round.h"
 
-#include "gui/gui_panel.h"
+#include "gui/gui_buton.h"
 #include "scene/scene_manager.h"
 
 #include <QSize>

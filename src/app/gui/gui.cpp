@@ -44,7 +44,7 @@ void Gui::SetParentGui(Gui* gui)
     }
 
     // gui不为空
-    GetGraphicsItem()->setParentItem(gui->GetGraphicsItem());
+    //    GetGraphicsItem()->setParentItem(gui->GetGraphicsItem());
     GetGraphicsItem()->setVisible(true);
     gui->child_guis_ << this;
     parent_gui_ = gui;
@@ -77,6 +77,11 @@ QRectF Gui::GetGuiBoundingBox()
     total_box.moveTopLeft(QPointF(0, 0));
 
     return total_box;
+}
+
+void Gui::SetSceneManager(SceneManager* scene_mgr)
+{
+    scene_mgr_ = scene_mgr;
 }
 
 void Gui::SetVisable(const bool& show)

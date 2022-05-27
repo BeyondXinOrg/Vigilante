@@ -33,6 +33,7 @@ public:
 
     void SetOperateHero(Hero* hero);
     void ClickedPosition(const Cell& cell);
+    void ClickedHeroSkill(int id);
 
     bool CanOperate() const;
     bool CanHandelClick() const;

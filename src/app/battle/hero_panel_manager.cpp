@@ -12,6 +12,9 @@ UIPanelManager::UIPanelManager(SceneManager* scene_mgr)
 
     ui_hero_description_ = new GuiHeroDescription();
     scene_mgr_->AddGui(ui_hero_description_);
+
+    connect(ui_hero_description_, &GuiHeroDescription::SgnClickedSkill,
+            this, &UIPanelManager::SgnClickedSkill);
 }
 
 void UIPanelManager::ChangeDescription(const Cell& cell)

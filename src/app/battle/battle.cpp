@@ -1,6 +1,6 @@
 ﻿#pragma execution_character_set("utf-8")
 
-#include "warfare.h"
+#include "battle.h"
 
 #include "audios/audios_manager.h"
 #include "battle/hero_panel_manager.h"

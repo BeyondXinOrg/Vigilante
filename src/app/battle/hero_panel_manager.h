@@ -24,6 +24,9 @@ public:
 
     void ClearDecorate();
 
+Q_SIGNALS:
+    void SgnClickedSkill(int id);
+
 private:
     SceneManager* scene_mgr_;
     GuiTerrainDescription* ui_terrain_description_;

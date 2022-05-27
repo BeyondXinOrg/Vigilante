@@ -26,7 +26,7 @@ public:
     virtual QRectF GetGuiBoundingBox();
 
     // 设置 manager
-    virtual void SetSceneManager(SceneManager* scene_mgr) = 0;
+    virtual void SetSceneManager(SceneManager* scene_mgr);
 
     // 是否隐藏
     virtual void SetVisable(const bool& show);

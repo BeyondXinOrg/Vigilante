@@ -1,6 +1,6 @@
 ﻿#include "battle_hero.h"
 
-#include "battle/warfare.h"
+#include "battle/battle.h"
 
 BattleHero::BattleHero()
 {

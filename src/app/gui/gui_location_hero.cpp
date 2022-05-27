@@ -1,6 +1,6 @@
 ﻿#include "gui_location_hero.h"
 
-#include "gui/gui_panel.h"
+#include "gui/gui_buton.h"
 #include "scene/scene_manager.h"
 
 #include <QSize>

@@ -3,10 +3,10 @@
 #include "generate_battle.h"
 
 #include "audios/audios_manager.h"
+#include "battle/battle.h"
 #include "battle/hero_panel_manager.h"
 #include "battle/operate_manager.h"
 #include "battle/round_manager.h"
-#include "battle/warfare.h"
 #include "data/cell.h"
 #include "diplomacy_manager.h"
 #include "hero/hero.h"

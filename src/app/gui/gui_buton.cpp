@@ -1,4 +1,4 @@
-﻿#include "gui_panel.h"
+﻿#include "gui_buton.h"
 
 #include <QGraphicsSceneMouseEvent>
 
